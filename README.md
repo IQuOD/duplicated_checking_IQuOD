@@ -16,5 +16,5 @@ Running orders:
 
 Here, N02***.m is to calculate the 'DNA' for each profiles in different weights.
 
-Input test file: WOD_1995_new.xlsx
+Input test file: WOD_1995_test.xlsx
 Output potential duplicated list file: DuplicateList_potential_duplicate_ALL_1995.txt
