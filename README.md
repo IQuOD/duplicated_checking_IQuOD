@@ -21,4 +21,4 @@ Output potential duplicated list file: DuplicateList_potential_duplicate_ALL_199
 
 
 If updates, please write down the update logs here (如有更新，请在此简要说明)
-January 15th, 2023: updated the N04 program with adding minor revision.
+\n January 15th, 2023: updated the N04 program with adding minor revision.
