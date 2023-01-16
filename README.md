@@ -1,7 +1,6 @@
 # duplicated_checking_IQuOD
 The duplicate checking algorithms contributed to IQuOD group
 
-
 Running orders:
 (1) N01_read_excel_1.m
 (2) N02_1_duplicate_check_main_2_mapstd_average.m
@@ -19,3 +18,7 @@ Here, N02***.m is to calculate the 'DNA' for each profiles in different weights.
 Input test file: WOD_1995_test.xlsx.
 
 Output potential duplicated list file: DuplicateList_potential_duplicate_ALL_1995.txt
+
+
+If updates, please write down the update logs here (如有更新，请在此简要说明)
+January 15th, 2023: updated the N04 program with adding minor revision.
