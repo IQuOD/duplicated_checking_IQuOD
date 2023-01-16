@@ -43,7 +43,7 @@ class Duplicate_check(object):
             ###屏幕输出配对信息
             self.output_info_pairs(content1,content2)
 
-            ###对数据进行比较 (温度逐个比较 盐度逐个比较 温度和 盐度和 深度和)
+            ###对数据进行比较判断是否真的重复（多个检查）
             isDuplicated=compair_main.compair(content1,content2)
 
             if(isOutput_detail=='1'):
@@ -54,7 +54,7 @@ class Duplicate_check(object):
             elif(isDuplicated==2):
                 print('Duplicate result is: Near Duplicate')
             else:
-                print('Duplicate result is: No')
+                print('Duplicate result is: Not Duplicate')
 
     def output_detail(self,content1,content2):
         temp1=content1['temp']
@@ -118,6 +118,8 @@ class Duplicate_check(object):
         print('%20s:%20s , %20s' %('Vehicle',content1['ocean_vehicle'], content2['ocean_vehicle']))
         print('%20s:%20s , %20s' %('Institute',content1['Institute'], content2['Institute']))
         print('%20s:%20s , %20s' %('WOD_cruise_identifier',content1['WOD_cruise_identifier'], content2['WOD_cruise_identifier']))
+        print('%20s:%20s , %20s' %('Wind_Direction',content1['Wind_Direction'], content2['Wind_Direction']))
+        print('%20s:%20.4f , %20.4f' %('Wind_Speed',content1['Wind_Speed'], content2['Wind_Speed']))
         print('%20s:%20.4f , %20.4f' %('Std_depth',content1['std_depth'], content2['std_depth']))
         print('%20s:%20.4f , %20.4f' %('Std_temp',content1['std_temp'], content2['std_temp']))
         print('%20s:%20.4f , %20.4f' %('Std_salinity',content1['std_salinity'], content2['std_salinity']))
@@ -140,7 +142,7 @@ class Duplicate_check(object):
             try:
                 access_no=f.variables['Access_no'][:]
             except:
-                access_no=-999
+                access_no=999
 
             time=f.variables['time']
             dtime = nc.num2date(time[-1], time.units)
@@ -267,9 +269,20 @@ class Duplicate_check(object):
             except:
                 need_z_fix=''
 
+            #### 2023.1.3 添加气象风速风向信息读入
+            try:
+                Wind_Direction=str(nc.chartostring(f.variables['Wind_Direction'][:]))
+            except:
+                Wind_Direction=''
+
+            try:
+                Wind_Speed=f.variables['Wind_Speed'][:]
+            except:
+                Wind_Speed=999
+
         ######用字典存会很有意义
         t_parameters={}
-        self.add_parameters(t_parameters,Institute=Institute,need_z_fix=need_z_fix,WOD_cruise_identifier=WOD_cruise_identifier,wod_unique_id=wod_unique_id,access_no=access_no,depth=depth,temp=temp,sal=sal,dataset_id=dataset_id,dataset_name=dataset_name,latitude=latitude,longitude=longitude,probe_type = probe_type, recorder = recorder, year=year,month=month,day=day,hour=hour,minute=minute,depth_number=depth_number,maximum_depth=maximum_depth,hasTemp=hasTemp, hasSalinity=hasSalinity,hasOxygen=hasOxygen,hasChlonophyII=hasChlonophyII,country_id=country_id,GMT_time=GMT_time,WMO_id=WMO_id,dbase_orig=dbase_orig,project_name=project_name,Platform=Platform,ocean_vehicle=ocean_vehicle,sum_depth=sum_depth,sum_temp=sum_temp,sum_salinity=sum_salinity,std_depth=std_depth,std_temp=std_temp,std_salinity=std_salinity,cor_temp_depth=cor_temp_depth,cor_sal_depth=cor_sal_depth)
+        self.add_parameters(t_parameters,Institute=Institute,need_z_fix=need_z_fix,WOD_cruise_identifier=WOD_cruise_identifier,wod_unique_id=wod_unique_id,access_no=access_no,depth=depth,temp=temp,sal=sal,dataset_id=dataset_id,dataset_name=dataset_name,latitude=latitude,longitude=longitude,probe_type = probe_type, recorder = recorder, year=year,month=month,day=day,hour=hour,minute=minute,depth_number=depth_number,maximum_depth=maximum_depth,hasTemp=hasTemp, hasSalinity=hasSalinity,hasOxygen=hasOxygen,hasChlonophyII=hasChlonophyII,country_id=country_id,GMT_time=GMT_time,WMO_id=WMO_id,dbase_orig=dbase_orig,project_name=project_name,Platform=Platform,ocean_vehicle=ocean_vehicle,sum_depth=sum_depth,sum_temp=sum_temp,sum_salinity=sum_salinity,std_depth=std_depth,std_temp=std_temp,std_salinity=std_salinity,cor_temp_depth=cor_temp_depth,cor_sal_depth=cor_sal_depth,Wind_Direction=Wind_Direction,Wind_Speed=Wind_Speed)
         return t_parameters
 
 
