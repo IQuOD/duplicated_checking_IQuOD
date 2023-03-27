@@ -4,7 +4,7 @@ import numpy as np
 import math
 import os
 import country_table as t_country
-from check_functions import compair_main
+import compair_main
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -13,7 +13,7 @@ warnings.filterwarnings('ignore')
 class Duplicate_check(object):
     def __init__(self):
 
-        self.path='/Users/zqtzt/Downloads/WOD_rawdata'
+        self.path='D:\Postgraduate\duplicate_checking\codes'
         # print(self.path)
 
     def read_potential_txt(self,txt_path):
@@ -34,10 +34,18 @@ class Duplicate_check(object):
         potential_output_path='DuplicateList_'+potential_txt_path
         duplicate_number=0
         fid_duplicate_list=open(potential_output_path,'w+')
-        print('filename1, filename2, unique_id_cast1, unique_id_cast2, same_moment_diff_loc_cruise, scaled_records, diff_records_in_same_Moment&Loc_cruise, rounded_truncate, wrong_location, wrong_date, wrong_moments, wrong_country, wrong_instru_types, identical_info, interpolated_pairs, ',end='',file=fid_duplicate_list)
+        print('filename1, filename2, unique_id_cast1, unique_id_cast2, same_moment_diff_loc_cruise, diff_records_in_same_Moment&Loc_cruise, scaled_records, rounded_truncate, wrong_location, wrong_date, wrong_moments, wrong_country, wrong_instru_types, identical_info, interpolated_pairs, CTD multiple observations, ',end='',file=fid_duplicate_list)
         print('Instrument_cast1, Instrument_cast2, Accession_cast1, Accession_cast2, lat_cast1, lat_cast2, lon_cast1, lon_cast2, year_cast1, year_cast2, month_cast1, month_cast2, day_cast1, day_cast2, hour_cast1, hour_cast2, minute_cast1, minute_cast2,',end='',file=fid_duplicate_list)
         print('probe_type_cast1, probe_type_cast2, recorder_cast1, recorder_cast2, depth_number_cast1, depth_number_cast2, maximum_depth_cast1, maximum_depth_cast2, country_cast1, country_cast2, GMT_time_cast1, GMT_time_cast2, dbase_orig_cast1, dbase_orig_cast2,',end='',file=fid_duplicate_list)
         print('project_cast1, project_cast2, Platform_cast1, Platform_cast2, ocean_vehicle_cast1, ocean_vehicle_cast2, WOD_cruise_identifier1,WOD_cruise_identifier2,Institute1,Institute2,need_z_fix1,need_z_fix2,sum_depth_cast1, sum_depth_cast2, sum_temp_cast1, sum_temp_cast2, sum_salinity_cast1, sum_salinity_cast2',file=fid_duplicate_list)
+
+        ###2023.1.10 输出一个只包含文件名信息的txt文件
+        potential_output_filename_path = 'Filename_' + potential_txt_path
+        fid_duplicate_filename_list = open(potential_output_filename_path, 'w+')
+
+        ###2023.2.14 输出不重复廓线对txt文件
+        potential_output_unduplicate_path = 'Unduplicatelist_' + potential_txt_path
+        fid_unduplicate_list = open(potential_output_unduplicate_path, 'w+')
 
         for i,potential_pairs in enumerate(potential_files_list):
             # if(i>100):
@@ -76,7 +84,15 @@ class Duplicate_check(object):
                 ###对数据进行比较 (温度逐个比较 盐度逐个比较 温度和 盐度和 深度和)
                 isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
 
-                if(isDuplicated==1 or isDuplicated==2):
+                #### 2023.03.23
+                ####在这里加两个个判断：如果同时被标记 wrong location 和 wrong date/time 且是同一条船，记录航班号并输出到 wrong_locationg_and_date_or_time.txt文档
+                                 # 如果同时被标记 wrong date 和 wrong time 且是同一条船，记录航班号并输出到 wrong_date_and_time.txt文档
+
+                #####2023.2.14如果不重复，输入到另一个txt文件中
+                if (isDuplicated == False):
+                    self.output_UnduplicateList_txt(fid_unduplicate_list,content1,content2,file1,file2)
+
+                elif(isDuplicated==1 or isDuplicated==2):
                     ###屏幕输出配对信息
                     
                     print(file1,file2)
@@ -86,6 +102,10 @@ class Duplicate_check(object):
 
                     ##输出每一个文件的unique_id和文件名，以及重复类型
                     self.output_DuplicateList_txt(fid_duplicate_list,content1,content2,duplicate_multimodels,file1,file2)
+
+                    ###2023.1.10 输出一个只包含文件名信息的txt文件
+                    self.output_only_filename_txt(fid_duplicate_filename_list,content1,content2,file1,file2)
+                    #self.output_only_filename_txt(fid_duplicate_filename_list, content1, content2, file1, file2)
 
                     if(isOutput_detail=='1'):
                         self.output_detail(content1,content2)
@@ -137,7 +157,7 @@ class Duplicate_check(object):
         duplicate_multimodels=duplicate_multimodels*1
         print('%20s,%20s,' % (file1,file2),end='',file=fid)
         print('%20d,%20d,' % (content1['wod_unique_id'], content2['wod_unique_id']),end='',file=fid)
-        print('%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,' % (duplicate_multimodels[0],duplicate_multimodels[1],duplicate_multimodels[2],duplicate_multimodels[3],duplicate_multimodels[4],duplicate_multimodels[5],duplicate_multimodels[6],duplicate_multimodels[7],duplicate_multimodels[8],duplicate_multimodels[9],duplicate_multimodels[10]),end='',file=fid)
+        print('%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,' % (duplicate_multimodels[0],duplicate_multimodels[1],duplicate_multimodels[2],duplicate_multimodels[3],duplicate_multimodels[4],duplicate_multimodels[5],duplicate_multimodels[6],duplicate_multimodels[7],duplicate_multimodels[8],duplicate_multimodels[9],duplicate_multimodels[10],duplicate_multimodels[11]),end='',file=fid)
         print('%20s,%20s,' % (content1['dataset_name'], content2['dataset_name']),end='',file=fid)
         print('%10d,%10d,' % (content1['access_no'], content2['access_no']),end='',file=fid)
         print('%10.4f, %10.4f,' %(content1['latitude'], content2['latitude']),end="",file=fid)
@@ -147,6 +167,46 @@ class Duplicate_check(object):
         print('%3d, %3d,' %(content1['day'], content2['day']),end="",file=fid)
         print('%3d, %3d,' %(content1['hour'], content2['hour']),end="",file=fid)
         print('%3d, %3d,' %(content1['minute'], content2['minute']),end="",file=fid)        
+        print('%20s, %20s,' %(content1['probe_type'], content2['probe_type']),end="",file=fid)
+        print('%20s, %20s,' %(content1['recorder'], content2['recorder']),end="",file=fid)
+        print('%5d, %5d,' %(content1['depth_number'], content2['depth_number']),end="",file=fid)
+        print('%10.3f, %10.3f,' %(content1['maximum_depth'], content2['maximum_depth']),end="",file=fid)
+        print('%5d, %5d,' %(content1['country_id'], content2['country_id']),end="",file=fid)
+        print('%8.3f , %8.3f,' %(content1['GMT_time'], content2['GMT_time']),end="",file=fid)
+        print('%20s, %20s,' %(content1['dbase_orig'], content2['dbase_orig']),end="",file=fid)
+        print('%20s, %20s,' %(content1['project_name'], content2['project_name']),end="",file=fid)
+        print('%20s, %20s,' %(content1['Platform'], content2['Platform']),end="",file=fid)
+        print('%20s, %20s,' %(content1['ocean_vehicle'], content2['ocean_vehicle']),end="",file=fid)
+        print('%20s, %20s,' %(content1['WOD_cruise_identifier'], content2['WOD_cruise_identifier']),end="",file=fid)
+        print('%20s, %20s,' %(content1['Institute'], content2['Institute']),end="",file=fid)
+        print('%20s, %20s,' %(content1['need_z_fix'], content2['need_z_fix']),end="",file=fid)
+        print('%15.4f, %15.4f,' %(content1['sum_depth'], content2['sum_depth']),end="",file=fid)
+        print('%15.4f, %15.4f,' %(content1['sum_temp'], content2['sum_temp']),end="",file=fid)
+        print('%15.4f, %15.4f,' %(content1['sum_salinity'], content2['sum_salinity']),end="",file=fid)
+        print('\n',end="",file=fid)
+
+    ###2023.1.10 输出一个只包含文件名信息的txt文件
+    # def output_only_filename_txt(self,fid,file1,file2):
+    #     print('%20s   %20s' % (file1, file2), end='', file=fid)
+    #     print('\n', end="", file=fid)
+    def output_only_filename_txt(self,fid,content1,content2,file1,file2):
+        print('%20s,%20s,' % (file1,file2),end='',file=fid)
+        print('%d,%d,' % (content1['access_no'],content2['access_no']), end='', file=fid)
+        print('\n',end="",file=fid)
+
+    ####2023.2.15 输出不重复文件信息
+    def output_UnduplicateList_txt(self,fid,content1,content2,file1,file2):
+        print('%20s,%20s,' % (file1,file2),end='',file=fid)
+        print('%20d,%20d,' % (content1['wod_unique_id'], content2['wod_unique_id']),end='',file=fid)
+        print('%20s,%20s,' % (content1['dataset_name'], content2['dataset_name']),end='',file=fid)
+        print('%10d,%10d,' % (content1['access_no'], content2['access_no']),end='',file=fid)
+        print('%10.4f, %10.4f,' %(content1['latitude'], content2['latitude']),end="",file=fid)
+        print('%10.4f, %10.4f,' %(content1['longitude'], content2['longitude']),end="",file=fid)
+        print('%5d, %5d,' %(content1['year'], content2['year']),end="",file=fid)
+        print('%3d, %3d,' %(content1['month'], content2['month']),end="",file=fid)
+        print('%3d, %3d,' %(content1['day'], content2['day']),end="",file=fid)
+        print('%3d, %3d,' %(content1['hour'], content2['hour']),end="",file=fid)
+        print('%3d, %3d,' %(content1['minute'], content2['minute']),end="",file=fid)
         print('%20s, %20s,' %(content1['probe_type'], content2['probe_type']),end="",file=fid)
         print('%20s, %20s,' %(content1['recorder'], content2['recorder']),end="",file=fid)
         print('%5d, %5d,' %(content1['depth_number'], content2['depth_number']),end="",file=fid)
