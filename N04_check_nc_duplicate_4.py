@@ -3,23 +3,20 @@ import numpy as np
 import math
 import os
 import country_table as t_country
-from check_functions import compair_main
+import compair_main
 import warnings
 warnings.filterwarnings('ignore')
 
-#这应该是一个输入一对文件名的nc，然后可以在屏幕上输出nc读取的一些基本信息，以及包括point-by-point的比较,最后输出一个程序判定的结果到底是不是真的duplicate
-
 class Duplicate_check(object):
     def __init__(self):
-        self.path='/Users/zqtzt/Downloads/WOD_rawdata/'
-        # print(self.path)
+        self.path='D:\Postgraduate\duplicate_checking\codes'
 
     def run(self):
         while True:
-            print('---------请输入两个疑似配对的netCDF文件名称--------')
-            file1=input('第一个nc文件名称是：').rstrip().lstrip()
-            file2=input('第二个nc文件名称是：').rstrip().lstrip()
-            isOutput_detail = input("是否需要输出廓线信息（1需要；0不需要）")
+            print('---------Please input two netCDF files which are potential duplicates--------')
+            file1=input('The first netCDF file name is: ').rstrip().lstrip()
+            file2=input('The second netCDF file name is: ').rstrip().lstrip()
+            isOutput_detail = input("Output profile information or not(1: Yes; 0: No)")
 			
             index_str=file1.rfind('_')
             date1=file1[index_str-14:index_str-6]
@@ -35,15 +32,15 @@ class Duplicate_check(object):
             filepath1=os.path.join(path1,file1)
             filepath2=os.path.join(path2,file2)
 
-            ###读取第一个nc文件数据
-            content1=self.read_nc_data(filepath1)   #content1是一个字典
-            ###读取第二个文件数据
+            ### Read the first netCDF file data
+            content1=self.read_nc_data(filepath1)   # content1 is a dictionary
+            ### Read the second netCDF file data
             content2=self.read_nc_data(filepath2)
 
-            ###屏幕输出配对信息
+            ### Output the information of two netCDF files
             self.output_info_pairs(content1,content2)
 
-            ###对数据进行比较判断是否真的重复（多个检查）
+            ### Determine whether it is really repeated
             isDuplicated=compair_main.compair(content1,content2)
 
             if(isOutput_detail=='1'):
@@ -66,7 +63,7 @@ class Duplicate_check(object):
         salinity2=content2['sal']
 
         print('\n')
-        ###如果观测点数不相同的话，无法比较，直接屏幕输出 depth1,temp1,  depth2, temp2
+        ### Different depth number, direct output depth1, temp1, depth2, temp2
         if(content1['depth_number']!=content2['depth_number']):
             levels=np.nanmax([content1['depth_number'],content2['depth_number']])
             print('%10s %10s %10s  %10s %10s %10s' %('depth1','temp1','salinity1','depth2','temp2','salinity2'))
@@ -78,7 +75,7 @@ class Duplicate_check(object):
                 elif (i>=content1['depth_number'] and i<content2['depth_number']):
                     print('%10s %10s %10s  %10.3f %10.4f %10.4f' %(' ',' ',' ',depth2[i],temp2[i],salinity2[i]))
         elif(content1['depth_number']==content2['depth_number']):
-        ##如果观测点数相同的话，可以比较，deph1,depth2,depth_diff,temp1,temp2,temp_diff,sal_diff
+        ### Same depth number, output deph1, depth2, depth_diff, temp1, temp2, temp_diff, sal_diff
             depth_diff=depth1-depth2
             temp_diff=temp1-temp2
             sal_diff=salinity1-salinity2
@@ -88,10 +85,12 @@ class Duplicate_check(object):
 
 
     def output_info_pairs(self,content1,content2):
-        #输出info
+        # output info
         print('%20s:%20s , %20s' % ('WOD_id',content1['wod_unique_id'], content2['wod_unique_id']))
         print('%20s:%20d , %20d' % ('Acess_no',content1['access_no'], content2['access_no']))
         print('%20s:%20s , %20s' % ('Dataset',content1['dataset_name'], content2['dataset_name']))
+        if (content1['dataset_id']  in [2,11,8] or content2['dataset_id']  in [2,11,8]):
+            print('%20s:%20s , %20s' % ('Cast_Direction', content1['Cast_Direction'], content2['Cast_Direction']))
         print('%20s:%20.4f , %20.4f' %('Lat',content1['latitude'], content2['latitude']))
         print('%20s:%20.4f , %20.4f' %('Long',content1['longitude'], content2['longitude']))
         print('%20s:%20d , %20d' %('Year',content1['year'], content2['year']))
@@ -108,6 +107,8 @@ class Duplicate_check(object):
         print('%20s:%20.3f , %20.3f' %('Maximum Depth',content1['maximum_depth'], content2['maximum_depth']))
         print('%20s:%20d , %20d' %('hasTemp',content1['hasTemp'], content2['hasTemp']))
         print('%20s:%20d , %20d' %('hasSalinity',content1['hasSalinity'], content2['hasSalinity']))
+        print('%20s:%20d , %20d' % ('hasOxygen', content1['hasOxygen'], content2['hasOxygen']))
+        print('%20s:%20d , %20d' % ('hasChlonophyII', content1['hasChlonophyII'], content2['hasChlonophyII']))
         print('%20s:%20d , %20d' %('Country',content1['country_id'], content2['country_id']))
         print('%20s:%20.3f , %20.3f' %('GMT_time',content1['GMT_time'], content2['GMT_time']))
         if('XBT' in content1['dataset_name']):
@@ -159,7 +160,6 @@ class Duplicate_check(object):
             longitude=round(float(f.variables['lon'][:]),4)
 
             depth=f.variables['z'][:]
-            #######2022.3.27添加
             depth[np.logical_or(depth>12000, depth<-10)]=np.nan
 
             depth_number=len(depth)
@@ -171,10 +171,8 @@ class Duplicate_check(object):
             if(np.isnan(std_depth)):
                 std_depth=999
 
-            # raise ('Error')
             try:
                 temp=f.variables['Temperature'][:]
-                #######2022.3.27添加
                 temp[np.logical_or(temp>40, temp<-2.5)]=np.nan
                 temp2=temp[~np.isnan(temp)]
                 depth2=depth[~np.isnan(temp)]
@@ -194,7 +192,6 @@ class Duplicate_check(object):
 
             try:
                 sal=f.variables['Salinity'][:]
-                #######2022.3.27添加
                 sal[np.logical_or(sal>43, sal<0)]=np.nan
                 sal2=sal[~np.isnan(sal)]
                 depth2=depth[~np.isnan(sal)]
@@ -269,7 +266,6 @@ class Duplicate_check(object):
             except:
                 need_z_fix=''
 
-            #### 2023.1.3 添加气象风速风向信息读入
             try:
                 Wind_Direction=str(nc.chartostring(f.variables['Wind_Direction'][:]))
             except:
@@ -280,16 +276,21 @@ class Duplicate_check(object):
             except:
                 Wind_Speed=999
 
-        ######用字典存会很有意义
+            try:
+                Cast_Direction=str(nc.chartostring(f.variables['Cast_Direction'][:]))
+                ### Converts the Cast Direction information to uppercase
+                Cast_Direction.upper()
+            except:
+                Cast_Direction=''
+
+        ### Save with dictionary
         t_parameters={}
-        self.add_parameters(t_parameters,Institute=Institute,need_z_fix=need_z_fix,WOD_cruise_identifier=WOD_cruise_identifier,wod_unique_id=wod_unique_id,access_no=access_no,depth=depth,temp=temp,sal=sal,dataset_id=dataset_id,dataset_name=dataset_name,latitude=latitude,longitude=longitude,probe_type = probe_type, recorder = recorder, year=year,month=month,day=day,hour=hour,minute=minute,depth_number=depth_number,maximum_depth=maximum_depth,hasTemp=hasTemp, hasSalinity=hasSalinity,hasOxygen=hasOxygen,hasChlonophyII=hasChlonophyII,country_id=country_id,GMT_time=GMT_time,WMO_id=WMO_id,dbase_orig=dbase_orig,project_name=project_name,Platform=Platform,ocean_vehicle=ocean_vehicle,sum_depth=sum_depth,sum_temp=sum_temp,sum_salinity=sum_salinity,std_depth=std_depth,std_temp=std_temp,std_salinity=std_salinity,cor_temp_depth=cor_temp_depth,cor_sal_depth=cor_sal_depth,Wind_Direction=Wind_Direction,Wind_Speed=Wind_Speed)
+        self.add_parameters(t_parameters,Institute=Institute,need_z_fix=need_z_fix,WOD_cruise_identifier=WOD_cruise_identifier,wod_unique_id=wod_unique_id,access_no=access_no,depth=depth,temp=temp,sal=sal,dataset_id=dataset_id,dataset_name=dataset_name,latitude=latitude,longitude=longitude,probe_type = probe_type, recorder = recorder, year=year,month=month,day=day,hour=hour,minute=minute,depth_number=depth_number,maximum_depth=maximum_depth,hasTemp=hasTemp, hasSalinity=hasSalinity,hasOxygen=hasOxygen,hasChlonophyII=hasChlonophyII,country_id=country_id,GMT_time=GMT_time,WMO_id=WMO_id,dbase_orig=dbase_orig,project_name=project_name,Platform=Platform,ocean_vehicle=ocean_vehicle,sum_depth=sum_depth,sum_temp=sum_temp,sum_salinity=sum_salinity,std_depth=std_depth,std_temp=std_temp,std_salinity=std_salinity,cor_temp_depth=cor_temp_depth,cor_sal_depth=cor_sal_depth,Wind_Direction=Wind_Direction,Wind_Speed=Wind_Speed,Cast_Direction=Cast_Direction)
         return t_parameters
 
 
     def find_id_country(self,country_name):
         country_name=country_name.upper()
-        #####################
-        #先自己制作好这个字典
         try:
             country_id=t_country.c_dict[country_name]
         except:
@@ -337,7 +338,6 @@ class Duplicate_check(object):
 
 
 def main():
-    #创建对象
     dc=Duplicate_check()
     dc.run()
 
