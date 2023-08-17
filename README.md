@@ -32,3 +32,4 @@ If updates, please write down the update logs here (如有更新，请在此简�
 
 (1) January 15th, 2023: updated the N04 program with adding minor revision.
 (2) February 3rd,2023: expanded the N02 series of procedures, at present, the N02_1** to N02_6** programs are based on the normalization of data by row; the N02_7** to N02_12** programs are based on the normalization of data by column; the N02_13** and N02_14** program are based on the principal component analysis method.
+(3) March 29th,2023:updated the N04 program with adding minor revision;Added only output duplicate data file name and accession number program to facilitate sensitivity check; Added a program to output non-duplicate data for manual inspection;Added procedures for checking sensitivity.

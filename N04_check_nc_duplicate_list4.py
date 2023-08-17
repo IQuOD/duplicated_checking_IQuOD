@@ -1,51 +1,53 @@
-#### 此程序用来逐条判定那些在N02步骤中快速找出的潜在重复对是否真的重复，如果重复则输出
+#### This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
 import netCDF4 as nc
 import numpy as np
 import math
 import os
 import country_table as t_country
-from check_functions import compair_main
+import compair_main
 import warnings
 warnings.filterwarnings('ignore')
-
-#这应该是一个输入一对文件名的nc，然后可以在屏幕上输出nc读取的一些基本信息，以及包括point-by-point的比较,最后输出一个程序判定的结果到底是不是真的duplicate
 
 class Duplicate_check(object):
     def __init__(self):
 
-        self.path='/Users/zqtzt/Downloads/WOD_rawdata'
-        # print(self.path)
+        self.path='D:\Postgraduate\duplicate_checking\codes'
 
     def read_potential_txt(self,txt_path):
         data=[]
         with open(txt_path,'r') as f:
             for line in f.readlines():
                 ss=line.split()
-                # print(ss)
                 data.append(ss)
 
         return data
 
     def run(self,potential_txt_path):
 
-        #######读取potential_files_txt
+        ### Read potential_files_txt
         potential_files_list=self.read_potential_txt(potential_txt_path)
 
         potential_output_path='DuplicateList_'+potential_txt_path
         duplicate_number=0
         fid_duplicate_list=open(potential_output_path,'w+')
-        print('filename1, filename2, unique_id_cast1, unique_id_cast2, same_moment_diff_loc_cruise, scaled_records, diff_records_in_same_Moment&Loc_cruise, rounded_truncate, wrong_location, wrong_date, wrong_moments, wrong_country, wrong_instru_types, identical_info, interpolated_pairs, ',end='',file=fid_duplicate_list)
+        print('filename1, filename2, unique_id_cast1, unique_id_cast2, same_moment_diff_loc_cruise, diff_records_in_same_Moment&Loc_cruise, scaled_records, rounded_truncate, wrong_location, wrong_date, wrong_moments, wrong_country, wrong_instru_types, identical_info, interpolated_pairs, CTD multiple observations, ',end='',file=fid_duplicate_list)
         print('Instrument_cast1, Instrument_cast2, Accession_cast1, Accession_cast2, lat_cast1, lat_cast2, lon_cast1, lon_cast2, year_cast1, year_cast2, month_cast1, month_cast2, day_cast1, day_cast2, hour_cast1, hour_cast2, minute_cast1, minute_cast2,',end='',file=fid_duplicate_list)
         print('probe_type_cast1, probe_type_cast2, recorder_cast1, recorder_cast2, depth_number_cast1, depth_number_cast2, maximum_depth_cast1, maximum_depth_cast2, country_cast1, country_cast2, GMT_time_cast1, GMT_time_cast2, dbase_orig_cast1, dbase_orig_cast2,',end='',file=fid_duplicate_list)
         print('project_cast1, project_cast2, Platform_cast1, Platform_cast2, ocean_vehicle_cast1, ocean_vehicle_cast2, WOD_cruise_identifier1,WOD_cruise_identifier2,Institute1,Institute2,need_z_fix1,need_z_fix2,sum_depth_cast1, sum_depth_cast2, sum_temp_cast1, sum_temp_cast2, sum_salinity_cast1, sum_salinity_cast2',file=fid_duplicate_list)
 
+        ### Output a txt file containing only filename information for sensitivity test
+        potential_output_filename_path = 'Filename_' + potential_txt_path
+        fid_duplicate_filename_list = open(potential_output_filename_path, 'w+')
+
+        ### Output a txt file containing nonduplicated profiles
+        potential_output_unduplicate_path = 'Unduplicatelist_' + potential_txt_path
+        fid_unduplicate_list = open(potential_output_unduplicate_path, 'w+')
+
         for i,potential_pairs in enumerate(potential_files_list):
-            # if(i>100):
-                # break
             file1=potential_pairs[0].rstrip().lstrip()
             for i in range(1,len(potential_pairs)):
                 file2=potential_pairs[i].rstrip().lstrip()
-                # isOutput_detail = input("是否需要输出廓线信息（1需要；0不需要）")
+                # isOutput_detail = input("Output profile information or not(1: Yes; 0: No)")
                 isOutput_detail='0'
     			
                 index_str=file1.rfind('_')
@@ -64,28 +66,35 @@ class Duplicate_check(object):
                 filepath1=os.path.join(path1,file1)
                 filepath2=os.path.join(path2,file2)
 
-                ###读取第一个nc文件数据
+                ### Read the first netCDF file data
                 try:
-                    content1=self.read_nc_data(filepath1)   #content1是一个字典
-                    ###读取第二个文件数据
+                    content1=self.read_nc_data(filepath1)   # content1 is a dictionary
+                    ### Read the second netCDF file data
                     content2=self.read_nc_data(filepath2)
                 except:
                     print('Failed reading: '+file1+' and '+file2)
                     continue
 
-                ###对数据进行比较 (温度逐个比较 盐度逐个比较 温度和 盐度和 深度和)
+                ### Compare the data
                 isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
 
-                if(isDuplicated==1 or isDuplicated==2):
-                    ###屏幕输出配对信息
-                    
+                ### Output nonduplicated profile pair information
+                if (isDuplicated == False):
+                    self.output_UnduplicateList_txt(fid_unduplicate_list,content1,content2,file1,file2)
+
+                elif(isDuplicated==1 or isDuplicated==2):
+                    ### Output pairing information
+
                     print(file1,file2)
 
                     duplicate_number=duplicate_number+1
-                    # self.output_info_pairs(content1,content2)
 
-                    ##输出每一个文件的unique_id和文件名，以及重复类型
+                    ### Output metadata information and duplicate type of duplicate profile pairs
                     self.output_DuplicateList_txt(fid_duplicate_list,content1,content2,duplicate_multimodels,file1,file2)
+
+                    ### Output a txt file containing only filename information for sensitivity test
+                    self.output_only_filename_txt(fid_duplicate_filename_list,file1,file2)
+                    #self.output_only_filename_txt(fid_duplicate_filename_list, content1, content2, file1, file2)
 
                     if(isOutput_detail=='1'):
                         self.output_detail(content1,content2)
@@ -111,7 +120,7 @@ class Duplicate_check(object):
         salinity2=content2['sal']
 
         print('\n')
-        ###如果观测点数不相同的话，无法比较，直接屏幕输出 depth1,temp1,  depth2, temp2
+        ### Different depth number, direct output depth1, temp1, depth2, temp2
         if(content1['depth_number']!=content2['depth_number']):
             levels=np.nanmax([content1['depth_number'],content2['depth_number']])
             print('%10s %10s  %10s %10s' %('depth1','temp1','depth2','temp2'))
@@ -123,7 +132,7 @@ class Duplicate_check(object):
                 elif (i>=content1['depth_number'] and i<content2['depth_number']):
                     print('%10s %10s  %10.3f %10.4f' %(' ',' ',depth2[i],temp2[i]))
         elif(content1['depth_number']==content2['depth_number']):
-        ##如果观测点数相同的话，可以比较，deph1,depth2,depth_diff,temp1,temp2,temp_diff,sal_diff
+        ### Same depth number, output deph1, depth2, depth_diff, temp1, temp2, temp_diff, sal_diff
             depth_diff=depth1-depth2
             temp_diff=temp1-temp2
             sal_diff=salinity1-salinity2
@@ -137,7 +146,7 @@ class Duplicate_check(object):
         duplicate_multimodels=duplicate_multimodels*1
         print('%20s,%20s,' % (file1,file2),end='',file=fid)
         print('%20d,%20d,' % (content1['wod_unique_id'], content2['wod_unique_id']),end='',file=fid)
-        print('%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,' % (duplicate_multimodels[0],duplicate_multimodels[1],duplicate_multimodels[2],duplicate_multimodels[3],duplicate_multimodels[4],duplicate_multimodels[5],duplicate_multimodels[6],duplicate_multimodels[7],duplicate_multimodels[8],duplicate_multimodels[9],duplicate_multimodels[10]),end='',file=fid)
+        print('%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,%2d,' % (duplicate_multimodels[0],duplicate_multimodels[1],duplicate_multimodels[2],duplicate_multimodels[3],duplicate_multimodels[4],duplicate_multimodels[5],duplicate_multimodels[6],duplicate_multimodels[7],duplicate_multimodels[8],duplicate_multimodels[9],duplicate_multimodels[10],duplicate_multimodels[11]),end='',file=fid)
         print('%20s,%20s,' % (content1['dataset_name'], content2['dataset_name']),end='',file=fid)
         print('%10d,%10d,' % (content1['access_no'], content2['access_no']),end='',file=fid)
         print('%10.4f, %10.4f,' %(content1['latitude'], content2['latitude']),end="",file=fid)
@@ -165,8 +174,47 @@ class Duplicate_check(object):
         print('%15.4f, %15.4f,' %(content1['sum_salinity'], content2['sum_salinity']),end="",file=fid)
         print('\n',end="",file=fid)
 
+    ### Output a txt file containing only filename information for sensitivity test
+    def output_only_filename_txt(self,fid,file1,file2):
+        print('%20s,%20s' % (file1, file2), end='', file=fid)
+        print('\n', end="", file=fid)
+    # def output_only_filename_txt(self,fid,content1,content2,file1,file2):
+    #     print('%20s,%20s,' % (file1,file2),end='',file=fid)
+    #     print('%d,%d,' % (content1['access_no'],content2['access_no']), end='', file=fid)
+    #     print('\n',end="",file=fid)
+
+    ### Output a txt file containing the metadata information of nonduplicated profiles
+    def output_UnduplicateList_txt(self,fid,content1,content2,file1,file2):
+        print('%20s,%20s,' % (file1,file2),end='',file=fid)
+        print('%20d,%20d,' % (content1['wod_unique_id'], content2['wod_unique_id']),end='',file=fid)
+        print('%20s,%20s,' % (content1['dataset_name'], content2['dataset_name']),end='',file=fid)
+        print('%10d,%10d,' % (content1['access_no'], content2['access_no']),end='',file=fid)
+        print('%10.4f, %10.4f,' %(content1['latitude'], content2['latitude']),end="",file=fid)
+        print('%10.4f, %10.4f,' %(content1['longitude'], content2['longitude']),end="",file=fid)
+        print('%5d, %5d,' %(content1['year'], content2['year']),end="",file=fid)
+        print('%3d, %3d,' %(content1['month'], content2['month']),end="",file=fid)
+        print('%3d, %3d,' %(content1['day'], content2['day']),end="",file=fid)
+        print('%3d, %3d,' %(content1['hour'], content2['hour']),end="",file=fid)
+        print('%3d, %3d,' %(content1['minute'], content2['minute']),end="",file=fid)
+        print('%20s, %20s,' %(content1['probe_type'], content2['probe_type']),end="",file=fid)
+        print('%20s, %20s,' %(content1['recorder'], content2['recorder']),end="",file=fid)
+        print('%5d, %5d,' %(content1['depth_number'], content2['depth_number']),end="",file=fid)
+        print('%10.3f, %10.3f,' %(content1['maximum_depth'], content2['maximum_depth']),end="",file=fid)
+        print('%5d, %5d,' %(content1['country_id'], content2['country_id']),end="",file=fid)
+        print('%8.3f , %8.3f,' %(content1['GMT_time'], content2['GMT_time']),end="",file=fid)
+        print('%20s, %20s,' %(content1['dbase_orig'], content2['dbase_orig']),end="",file=fid)
+        print('%20s, %20s,' %(content1['project_name'], content2['project_name']),end="",file=fid)
+        print('%20s, %20s,' %(content1['Platform'], content2['Platform']),end="",file=fid)
+        print('%20s, %20s,' %(content1['ocean_vehicle'], content2['ocean_vehicle']),end="",file=fid)
+        print('%20s, %20s,' %(content1['WOD_cruise_identifier'], content2['WOD_cruise_identifier']),end="",file=fid)
+        print('%20s, %20s,' %(content1['Institute'], content2['Institute']),end="",file=fid)
+        print('%20s, %20s,' %(content1['need_z_fix'], content2['need_z_fix']),end="",file=fid)
+        print('%15.4f, %15.4f,' %(content1['sum_depth'], content2['sum_depth']),end="",file=fid)
+        print('%15.4f, %15.4f,' %(content1['sum_temp'], content2['sum_temp']),end="",file=fid)
+        print('%15.4f, %15.4f,' %(content1['sum_salinity'], content2['sum_salinity']),end="",file=fid)
+        print('\n',end="",file=fid)
+
     def output_info_pairs(self,content1,content2):
-        #输出info
         print('%20s:%20s , %20s' % ('WOD_id',content1['wod_unique_id'], content2['wod_unique_id']))
         print('%20s:%20d , %20d' % ('Acess_no',content1['access_no'], content2['access_no']))
         print('%20s:%20s , %20s' % ('Dataset',content1['dataset_name'], content2['dataset_name']))
@@ -234,7 +282,6 @@ class Duplicate_check(object):
             longitude=round(float(f.variables['lon'][:]),4)
 
             depth=f.variables['z'][:]
-            #######2022.3.27添加
             depth[np.logical_or(depth>12000, depth<-10)]=np.nan
 
             depth_number=len(depth)
@@ -246,10 +293,8 @@ class Duplicate_check(object):
             if(np.isnan(std_depth)):
                 std_depth=999
 
-            # raise ('Error')
             try:
                 temp=f.variables['Temperature'][:]
-                #######2022.3.27添加
                 temp[np.logical_or(temp>40, temp<-2.5)]=np.nan
                 temp2=temp[~np.isnan(temp)]
                 depth2=depth[~np.isnan(temp)]
@@ -269,7 +314,6 @@ class Duplicate_check(object):
 
             try:
                 sal=f.variables['Salinity'][:]
-                #######2022.3.27添加
                 sal[np.logical_or(sal>43, sal<0)]=np.nan
                 sal2=sal[~np.isnan(sal)]
                 depth2=depth[~np.isnan(sal)]
@@ -344,7 +388,6 @@ class Duplicate_check(object):
             except:
                 need_z_fix=''
 
-            #### 2023.1.3 添加气象风速风向信息读入
             try:
                 Wind_Direction=str(nc.chartostring(f.variables['Wind_Direction'][:]))
             except:
@@ -355,16 +398,21 @@ class Duplicate_check(object):
             except:
                 Wind_Speed=999
 
-        ######用字典存会很有意义
+            try:
+                cast_direction = str(nc.chartostring(f.variables['Cast_Direction'][:]))
+                ### Converts the Cast Direction information to uppercase
+                Cast_Direction=cast_direction.upper()
+            except:
+                Cast_Direction = ''
+
+        ### Save with dictionary
         t_parameters={}
-        self.add_parameters(t_parameters,Institute=Institute,need_z_fix=need_z_fix,WOD_cruise_identifier=WOD_cruise_identifier,wod_unique_id=wod_unique_id,access_no=access_no,depth=depth,temp=temp,sal=sal,dataset_id=dataset_id,dataset_name=dataset_name,latitude=latitude,longitude=longitude,probe_type = probe_type, recorder = recorder, year=year,month=month,day=day,hour=hour,minute=minute,depth_number=depth_number,maximum_depth=maximum_depth,hasTemp=hasTemp, hasSalinity=hasSalinity,hasOxygen=hasOxygen,hasChlonophyII=hasChlonophyII,country_id=country_id,GMT_time=GMT_time,WMO_id=WMO_id,dbase_orig=dbase_orig,project_name=project_name,Platform=Platform,ocean_vehicle=ocean_vehicle,sum_depth=sum_depth,sum_temp=sum_temp,sum_salinity=sum_salinity,std_depth=std_depth,std_temp=std_temp,std_salinity=std_salinity,cor_temp_depth=cor_temp_depth,cor_sal_depth=cor_sal_depth,Wind_Direction=Wind_Direction,Wind_Speed=Wind_Speed)
+        self.add_parameters(t_parameters, Institute=Institute, need_z_fix=need_z_fix,WOD_cruise_identifier=WOD_cruise_identifier, wod_unique_id=wod_unique_id,access_no=access_no, depth=depth, temp=temp, sal=sal, dataset_id=dataset_id,dataset_name=dataset_name, latitude=latitude, longitude=longitude, probe_type=probe_type,recorder=recorder, year=year, month=month, day=day, hour=hour, minute=minute,depth_number=depth_number, maximum_depth=maximum_depth, hasTemp=hasTemp,hasSalinity=hasSalinity, hasOxygen=hasOxygen, hasChlonophyII=hasChlonophyII,country_id=country_id, GMT_time=GMT_time, WMO_id=WMO_id, dbase_orig=dbase_orig,project_name=project_name, Platform=Platform, ocean_vehicle=ocean_vehicle,sum_depth=sum_depth, sum_temp=sum_temp, sum_salinity=sum_salinity, std_depth=std_depth,std_temp=std_temp, std_salinity=std_salinity, cor_temp_depth=cor_temp_depth,cor_sal_depth=cor_sal_depth, Wind_Direction=Wind_Direction, Wind_Speed=Wind_Speed,Cast_Direction=Cast_Direction)
         return t_parameters
 
 
     def find_id_country(self,country_name):
         country_name=country_name.upper()
-        #####################
-        #先自己制作好这个字典
         try:
             country_id=t_country.c_dict[country_name]
         except:
@@ -412,10 +460,9 @@ class Duplicate_check(object):
 
 
 def main():
-    #创建对象
     potential_txt_path='./*.txt'
     dc=Duplicate_check()
-    potential_txt_path=input('请输入potential_txt的路径：')
+    potential_txt_path=input('Please input the path to potential txt:')
     dc.run(potential_txt_path)
 
 
