@@ -1,8 +1,8 @@
-%%% Focus on searching for potential duplicate pairs that are equal in sum_depth and sum_temperature
+%%% Focus on searching for potential duplicate pairs which are equal in sum_depth and sum_temperature
 clear
 clc
 
-for nian=1975:1975
+for nian=1995:1995 %year
     
     eval(['load DNA_summary_',num2str(nian),'.mat'])
     
@@ -12,21 +12,25 @@ for nian=1975:1975
     
     %%% Calculate the average of sum_depth and sum_temp
     average_DNA=nanmean(DNA_series_temp_depth,2);
- 
+    
     %%% Sort average_DNA in ascending order to facilitate the establishment of the later search algorithm
     [average_DNA,index]=sort(average_DNA);
     filename_info=filename_info(index,:);
     DNA_series=DNA_series(index,:);
     
-    %%% Cyclic search
+    %%% loop
     output_variables=['filename',variable_name];
     
     filename=['./potential_duplicates_output/',num2str(nian),'/potential_duplicate_',num2str(nian),'_depth_temp.txt'];
+    [ filepath , name , ext ] = fileparts( filename );
+    if(~exist(filepath))
+        mkdir(filepath)
+    end
     if(exist(filename))
         delete(filename)
     end
     fid=fopen(filename,'w+');
-
+    
     
     number_pairs=0;
     number_profiles=0;
@@ -42,7 +46,7 @@ for nian=1975:1975
             id=[i;find(difference==nanmin(difference))];
             DNA_series_small=DNA_series(id,:);
             
-            %%% If it's buoy data(MRB), skip
+            %%% If it's buoy data(MRB), skip it
             if(DNA_series(i,2)==7) % MRB
                 continue
             end
@@ -82,7 +86,7 @@ for nian=1975:1975
             end
             %%% Exclude long-term continuous observation of fixed points/nearby points(MRB¡¢Bottle¡¢SUR)
             if((DNA_series_small(1,2)==1 && DNA_series_small(2,2)==1) || (DNA_series_small(1,2)==7 && DNA_series_small(2,2)==7) || (DNA_series_small(1,2)==5 && DNA_series_small(2,2)==5))
-                index1=all(DNA_series_small(1,[5,6,8,9,22,23,24])==DNA_series_small(2,[5,6,8,9,22,23,24]));  
+                index1=all(DNA_series_small(1,[5,6,8,9,22,23,24])==DNA_series_small(2,[5,6,8,9,22,23,24]));
                 index2=abs(DNA_series_small(1,27)-DNA_series_small(2,27))>0.05; % sum_temp is different
                 index3=abs(DNA_series_small(1,29)-DNA_series_small(2,29))<1e-5; % sum_depth is same
                 index4=all(abs(DNA_series_small(1,[3,4])-DNA_series_small(2,[3,4]))<0.01);   % fixed point: latitude and longitude less than 0.01 degree
@@ -95,7 +99,7 @@ for nian=1975:1975
             if((abs(DNA_series_small(1,28)-DNA_series_small(2,28))>1e-3) && (DNA_series_small(1,28)>1e-6))
                 continue
             end
-           
+            
             %%% Output filename
             for m=1:length(id)
                 fprintf(fid,'%s ',filename_info(id(m),:));

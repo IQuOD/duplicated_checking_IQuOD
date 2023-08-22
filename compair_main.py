@@ -21,7 +21,7 @@ def compair(content1,content2):
     near_duplicated=False
     exact_duplicated=False
 
-    duplicate_check1=False  #Spatial-temporal checks: Simultaneously but at different location
+    duplicate_check1=False  #Spatial-temporal checks: Simultaneously by the sameship but at different location
     duplicate_check2=False  #Spatial-temporal checks: Simultaneously and co-located
     duplicate_check3=False  #Data records checks: Correlation check
     duplicate_check4=False  #Data records checks: Truncation check
@@ -30,7 +30,7 @@ def compair(content1,content2):
     duplicate_check7=False  #Data records checks: Layer by layer check-wrong time
     duplicate_check8=False  #Data records checks: Layer by layer check-wrong country
     duplicate_check9=False  #Data records checks: Layer by layer check-wrong instrument
-    duplicate_check10=False #Data records checks: Accurate repeat check (depth-by-depth check)
+    duplicate_check10=False #Data records checks: Exact duplicates check (depth-by-depth check)
     duplicate_check11=False #Data records checks: Interpolation check
     duplicate_check12=False #Data records checks: CTD double data check
     
@@ -383,13 +383,13 @@ def compair(content1,content2):
         print("Spatial-temporal checks--Simultaneously and co-located: %d" % (duplicate_check2))
         print("Correlation check: %d" % (duplicate_check3))
         print("Truncation check: %d" % (duplicate_check4))
-        print("Layer by layer check-wrong location: %d" % (duplicate_check5))
-        print("Layer by layer check-wrong date: %d" % (duplicate_check6))
-        print("Layer by layer check-wrong time: %d" % (duplicate_check7))
-        print("Layer by layer check-wrong country: %d" % (duplicate_check8))
-        print("Layer by layer check-wrong instrument: %d" % (duplicate_check9))
-        print("Accurate repeat check: %d" % (duplicate_check10))
-        print("Interpolation(missing data) check: %d" % (duplicate_check11))
+        print("Layer by layer check - wrong location: %d" % (duplicate_check5))
+        print("Layer by layer check - wrong date: %d" % (duplicate_check6))
+        print("Layer by layer check - wrong time: %d" % (duplicate_check7))
+        print("Layer by layer check - wrong country: %d" % (duplicate_check8))
+        print("Layer by layer check - wrong instrument: %d" % (duplicate_check9))
+        print("Exact duplicates check: %d" % (duplicate_check10))
+        print("Interpolation (missing data) check: %d" % (duplicate_check11))
         print("CTD double data check: %d" % (duplicate_check12))
 
     if(isDuplicate==True):  #exat duplicated or near duplicated
@@ -402,9 +402,8 @@ def compair(content1,content2):
 
     duplicate_multimodels=[duplicate_check1,duplicate_check2,duplicate_check3,duplicate_check4,duplicate_check5,duplicate_check6,duplicate_check7,duplicate_check8,duplicate_check9,duplicate_check10,duplicate_check11,duplicate_check12]
 
-    return isDuplicate,duplicate_multimodels   ### only for N04_check_nc_duplicate_list4.py
-    #return isDuplicate   ### for N04_check_nc_duplicate.py
-
+    return isDuplicate,duplicate_multimodels
+    
 
 def distance(lat1,lat2,lon1,lon2):
     r=6371 # earth radius

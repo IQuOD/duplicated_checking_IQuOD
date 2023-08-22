@@ -3,7 +3,7 @@
 clear
 clc
 
-for nian=1975:1975
+for nian=1995:1995
     
     eval(['load DNA_summary_',num2str(nian),'.mat'])
     
@@ -25,10 +25,12 @@ for nian=1975:1975
     DNA_mapped=DNA_mapped(index,:);
     DNA_series=DNA_series(index,:);
     
-    %%% Cyclic search
-    output_variables=['filename',variable_name];
-    
+    %%% loop
     filename=['./potential_duplicates_output/',num2str(nian),'/potential_duplicat_mapminmax_',num2str(nian),'.txt'];
+    [ filepath , name , ext ] = fileparts( filename );
+    if(~exist(filepath))
+        mkdir(filepath)
+    end
     if(exist(filename))
         delete(filename)
     end

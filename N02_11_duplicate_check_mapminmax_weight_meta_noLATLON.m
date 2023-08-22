@@ -3,7 +3,7 @@
 clear
 clc
 
-for nian=1975:1975
+for nian=1995:1995
     eval(['load DNA_summary_',num2str(nian),'.mat'])
     
     
@@ -18,7 +18,6 @@ for nian=1975:1975
     %%% Use entropy weight method to calculate the weight
     [weight]=entropy_weight(DNA_series_copy);
     
-    figure(); bar(weight)
     %%% Calculate the weighted average
     average_DNA_single=NaN(size(DNA_mapped));
     for i=1:length(weight)
@@ -33,11 +32,15 @@ for nian=1975:1975
     DNA_series=DNA_series(index,:);
     DNA_series_copy=DNA_series_copy(index,:);
     
-    figure();plot(average_DNA,'o')
+    %figure();plot(average_DNA,'o')
     
-    %%% Cyclic search
+    %%% loop
     output_variables=['filename',variable_name];
     filename=['./potential_duplicates_output/',num2str(nian),'/potential_duplicate_',num2str(nian),'_mapminmax_weight_noLATLON.txt'];
+    [ filepath , name , ext ] = fileparts( filename );
+    if(~exist(filepath))
+        mkdir(filepath)
+    end
     if(exist(filename))
         delete(filename)
     end
@@ -106,11 +109,3 @@ for nian=1975:1975
     number_profiles
 end
 
-%%
-
-% for i=1:length(filename_info(:,1))
-%     filename=filename_info(i,:);
-%     if(contains(filename,'CASv1_T_19950713_00728_BOT.nc') || contains(filename,'CASv1_T_19950713_00727_BOT.nc'))
-%         i
-%     end
-% end

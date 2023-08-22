@@ -1,11 +1,11 @@
 %%% Using mapminmax normalize each column of data, calculate the weighted average by entropy weight method, and then compare which is closer
-%%% Use a portion of the metadata
+%%% Use part of the metadata
 
 
 clear
 clc
 
-for nian=1975:1975
+for nian=1995:1995
     eval(['load DNA_summary_',num2str(nian),'.mat'])
     
     DNA_series_meta=DNA_series(:,[1:26]);
@@ -19,7 +19,7 @@ for nian=1975:1975
     
     %%% Use entropy weight method to calculate the weight
     [weight]=entropy_weight(DNA_series_meta);
-    figure(); bar(weight)
+    %figure(); bar(weight)
     
     %%% Calculate the weighted average
     average_DNA_single=NaN(size(DNA_mapped));
@@ -35,9 +35,7 @@ for nian=1975:1975
     DNA_series=DNA_series(index,:);
     DNA_series_meta=DNA_series_meta(index,:);
     
-    %%% Cyclic search
-    output_variables=['filename',variable_name];
-    
+    %%% loop
     filename=['./potential_duplicates_output/',num2str(nian),'/potential_duplicate_',num2str(nian),'_mapminmax_weight_meta.txt'];
     if(exist(filename))
         delete(filename)
@@ -110,7 +108,3 @@ for nian=1975:1975
 end
 
 
-%%
-% figure();
-% plot(average_DNA2,'o');
-% ylabel('Average DNA')

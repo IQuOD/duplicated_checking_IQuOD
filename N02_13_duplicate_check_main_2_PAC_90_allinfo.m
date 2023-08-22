@@ -4,7 +4,7 @@
 clear
 clc
 
-for nian=1975:1975
+for nian=1995:1995
     eval(['load DNA_summary_',num2str(nian),'.mat'])
     
     DNA_series_copy=DNA_series;
@@ -43,10 +43,14 @@ for nian=1975:1975
     DNA_new=DNA_new(index,:);
     DNA_series=DNA_series(index,:);
     
-    %%% Cyclic search
+    %%% loop
     output_variables=['filename',variable_name];
     
     filename=['./potential_duplicates_output/',num2str(nian),'/potential_duplicat_',num2str(nian),'_PCA_90_allinfo.txt']
+    [ filepath , name , ext ] = fileparts( filename );
+    if(~exist(filepath))
+        mkdir(filepath)
+    end
     if(exist(filename))
         delete(filename)
     end
@@ -65,7 +69,7 @@ for nian=1975:1975
             id=[i;find(difference==nanmin(difference))];
             DNA_series_small=DNA_series(id,:);
             
-            %%% If it's buoy data(MRB、SUR、DRB), skip
+            %%% If it's buoy data(MRB SUR DRB), skip
             if(DNA_series(i,2)==5||DNA_series(i,2)==7||DNA_series(i,2)==9) % SUR MRB DRB
                 continue
             end
@@ -100,7 +104,7 @@ for nian=1975:1975
                     continue
                 end
             end
-            %%% Exclude long-term continuous observation of fixed points/nearby points(MRB、Bottle、SUR)
+            %%% Exclude long-term continuous observation of fixed points/nearby points(MRB Bottle SUR)
             if((DNA_series_small(1,2)==1 && DNA_series_small(2,2)==1) || (DNA_series_small(1,2)==7 && DNA_series_small(2,2)==7) || (DNA_series_small(1,2)==5 && DNA_series_small(2,2)==5))
                 index1=all(DNA_series_small(1,[5,6,8,9,22,23,24])==DNA_series_small(2,[5,6,8,9,22,23,24]));  
                 index2=abs(DNA_series_small(1,27)-DNA_series_small(2,27))>0.05; % sum_temp is different

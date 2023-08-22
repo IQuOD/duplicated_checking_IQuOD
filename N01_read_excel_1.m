@@ -2,12 +2,10 @@
 clear
 clc
 
-for nian=1975:1975
+for nian=1995:1995 %year
     
-    file=['../WOD_',num2str(nian),'.xlsx']
+    file=['./CODCv1_',num2str(nian),'.xlsx']
     
-    %nian=1992;
-    %file='WOD_1992_1993_AXBT_Mexico.xlsx';
     
     [DNA_series,txt,~]=xlsread(file);
     DNA_series=single(DNA_series);
@@ -22,8 +20,8 @@ for nian=1975:1975
     
     DNA_series(:,1)=[]; % Delete WOD_unique_id
     
-    txt(:,1)=[];  % Delete filename
-    txt(:,2)=[]; % Delete WOD_unique_id
+    txt(:,1)=[];  % Delete filename column
+    txt(:,2)=[]; % Delete WOD_unique_id column
     
     
     
