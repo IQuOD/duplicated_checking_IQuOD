@@ -1,8 +1,9 @@
-# duplicated_checking_IQuOD
+# duplicated_checking_IQuOD (DC_OCEAN)
 Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS)
 
 Contributor: International Quality-controlled Ocean Database (*IQuOD*) members
 
+Zenodo software DOI: https://doi.org/10.5281/zenodo.10689637
 
 
 ## Overview
