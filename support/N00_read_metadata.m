@@ -82,10 +82,10 @@ for m=1:n_prof
     sum_depth = round(nansum(depth), 4);
     std_depth = round(nanstd(depth), 4);
     if isnan(sum_depth)
-        sum_depth = 999;
+        sum_depth = NaN;
     end
     if isnan(std_depth)
-        std_depth = 999;
+        std_depth = NaN;
     end
 
     % Read 'Temperature' and apply conditions
@@ -103,19 +103,19 @@ for m=1:n_prof
         cor_temp_depth = round(corr(temp2, depth2), 5);
 
         if isnan(cor_temp_depth)
-            cor_temp_depth = 999;
+            cor_temp_depth = NaN;
         end
         if isnan(sum_temp) || sum_temp == 0.0
-            sum_temp = 999;
+            sum_temp = NaN;
         end
         if isnan(std_temp) || std_temp == 0.0
-            std_temp = 999;
+            std_temp = NaN;
         end
     catch
         hasTemp = 0;
-        sum_temp = 999;
-        std_temp = 999;
-        cor_temp_depth = 999;
+        sum_temp = NaN;
+        std_temp = NaN;
+        cor_temp_depth = NaN;
     end
 
     % Read 'salinity' and apply conditions
@@ -128,24 +128,24 @@ for m=1:n_prof
         depth2 = depth(~isnan(sal));
 
         hasSalinity = 1;
-        sum_sal = round(nansum(temp), 4);
-        std_sal = round(nanstd(temp), 4);
+        sum_sal = round(nansum(sal), 4);
+        std_sal = round(nanstd(sal), 4);
         cor_sal_depth = round(corr(sal2, depth2), 5);
 
         if isnan(cor_sal_depth)
-            cor_sal_depth = 999;
+            cor_sal_depth = NaN;
         end
         if isnan(sum_sal) || sum_sal == 0.0
-            sum_sal = 999;
+            sum_sal = NaN;
         end
         if isnan(std_sal) || std_sal == 0.0
-            std_sal = 999;
+            std_sal = NaN;
         end
     catch
         hasSalinity = 0;
-        sum_sal = 999;
-        std_sal = 999;
-        cor_sal_depth = 999;
+        sum_sal = NaN;
+        std_sal = NaN;
+        cor_sal_depth = NaN;
     end
 
     try
@@ -165,7 +165,7 @@ for m=1:n_prof
     try
         wod_unique_id = double(netcdf.getVar(f, netcdf.inqVarID(f, 'wod_unique_cast')));
     catch
-        wod_unique_id = 999;
+        wod_unique_id = NaN;
     end
 
     try
@@ -191,7 +191,7 @@ for m=1:n_prof
         WMOID = netcdf.inqVarID(f, 'WMO_ID');
         WMO_id = double(netcdf.getVar(f, WMOID));
     catch
-        WMO_id = 999;
+        WMO_id = NaN;
     end
 
     try
@@ -233,7 +233,7 @@ for m=1:n_prof
     try
         accession_number = netcdf.getVar(f, netcdf.inqVarID(f, 'Access_no'));
     catch
-        accession_number = 999;
+        accession_number = NaN;
     end
 
     try
@@ -294,7 +294,7 @@ for m=1:n_prof
     elseif contains(dataset_name, 'microbt')
         dataset_id = 14;
     else
-        dataset_id = 999;
+        dataset_id = NaN;
     end
 
 
