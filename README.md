@@ -25,6 +25,41 @@ A scentific paper to introduce this algorithm is in prepration.
 
 
 
+## Installation
+
+Now the 'DC_OCEAN' package is uploaded to pypi (https://pypi.org/project/DC-OCEAN/1.1). For those of you interests, you can easily and freely accessed via 'pip' or 'conda' with the following commands: 
+
+#### (1) Requirement packages
+
+* Python 3 (>=3.7)
+* numpy (>= 1.19.1)
+* timezonefinder (>= 5.2.0)
+* netCDF4 (>= 1.5.5.1)
+
+> Computer Memory: >8GB is obligatory.
+>
+> MATLAB is needed to run the support codes.
+
+#### (2) Installing DC_OCEAN
+
+**Step1: Using pip to quickly install**
+
+If you don’t already have **PIP** running on your machine, first you need to **install pip**, then you can run:
+
+```shell
+pip install DC_OCEAN
+```
+
+Please make sure  **PIP** fits your version of >=python3.7. In some machines, you should use pip3 to install DC_OCEAN because **"pip"** may be linked to python2.X 
+
+If you use the [conda](http://conda.io/) package manager `conda install -c conda-forge DC_OCEAN`
+
+Then, you will wait for **several seconds** to install the package.
+
+
+
+#### (3) Installing DC_OCEAN
+
 **Below is the simply instruction of the algorithm. Further information will be provided in the scentific paper.** 
 
 **Running orders:**
@@ -89,19 +124,20 @@ Here, `./supports/N00_read_metadata.m` is to read the input test (netCDF format)
 
 ## Update logs
 
-(1) January 15th, 2023: updated the N04 program with adding minor revision.
-(2) February 3rd,2023: expanded the N02 series of procedures, at present, the N02_1** to N02_6** programs are based on the normalization of data by row; the N02_7** to N02_12** programs are based on the normalization of data by column; the N02_13** and N02_14** program are based on the principal component analysis method.
-(3) March 29th,2023:updated the N04 program with adding minor revision; Added only output duplicate data file name and accession number program to facilitate sensitivity check; Added a program to output non-duplicate data for manual inspection;Added procedures for checking sensitivity.
-
-(4) August 22rd, 2023: Finalized the first version of the duplicate checking alogrithim (v1.0)
-
-(5) January 5, 2024:Improved version  (v1.1)
+* January 15, 2023: updated the `N04` program with adding minor revisions.
+* February 3, 2023: expanded the `N02` series of procedures. At present, the `N02_1**` to `N02_6**` programs are based on the normalization of data by row; the `N02_7**` to `N02_12**` programs are based on the normalization of data by column; the `N02_13**` and `N02_14**` program are based on the principal component analysis method.
+* March 29, 2023: updated the `N04` program with minor revision; Added only output duplicate data file name and accession number program to facilitate sensitivity check; Added a program to output non-duplicate data for manual inspection; Added procedures for checking sensitivity.
+* August 22, 2023: Finalized the first version of the duplicate checking algorithm (v1.0)
+* November 2023: Issued DC_OCEAN Python package (v1.0).
+* March 2024:  Issued DC_OCEAN Python package (v1.1) and linked the package to the Zenodo.
 
 ## Citation
 
-[1] Xinyi Song, Zhetao Tan,  Lijing Cheng et al, 2024: An open source algorithm of duplicate checking for ocean *in-situ* profiles. (In prepration)
+Please remember to cite this study if you use DC_OCEAN for any purposes:
 
-[2] Xinyi Song, Zhetao Tan, Lijing Cheng. 2023, A benchmark dataset for ocean profiles duplicate checking. http://dx.doi.org/10.12157/IOCAS.20230821.001
+[1] X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, G. Castelao, V. Gouretski, L. Cheng, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*
+
+[2] Tan, Z. and Song, X. (2024) IQuOD/duplicated_checking_IQuOD: DC_OCEAN (DC_OCEAN). Zenodo. https://doi.org/10.5281/zenodo.10689637
 
 
 
