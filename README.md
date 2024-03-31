@@ -21,7 +21,7 @@ A scentific paper to introduce this algorithm is in prepration.
 
 
 
-**A detailed user manual can be found in:** `DC_OCEAN_user_document-v1.0.md`
+**A detailed user manual can be found in:** `DC_OCEAN_user_document-v1.1.md`
 
 
 
