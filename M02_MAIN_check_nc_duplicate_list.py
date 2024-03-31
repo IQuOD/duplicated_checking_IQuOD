@@ -100,7 +100,7 @@ class Duplicate_check(object):
                     if(isDuplicated==1):
                         print(file1+' v.s. '+file2+': Exact Duplicate')
                     elif(isDuplicated==2):
-                        print(file1+' v.s. '+file2+': Near Duplicate')
+                        print(file1+' v.s. '+file2+': Possible Duplicate')
                     else:
                         print(file1+' v.s. '+file2+': No Duplicate')
 
