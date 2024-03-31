@@ -58,6 +58,12 @@ Then, you will wait for **several seconds** to install the package.
 
 
 
+If you fails on this step, you can manually install the package with the `DC_OCEAN-1.1-py3-none-any.whl`file:
+
+```shell
+pip install DC_OCEAN-1.1-py3-none-any.whl
+```
+
 #### (3) Installing DC_OCEAN
 
 **Below is the simply instruction of the algorithm. Further information will be provided in the scentific paper.** 
