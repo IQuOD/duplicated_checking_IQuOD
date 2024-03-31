@@ -60,7 +60,7 @@ class Duplicate_check(object):
             if(isDuplicated==1):
                 print('Duplicate result is: Exact Duplicate')
             elif(isDuplicated==2):
-                print('Duplicate result is: Near Duplicate')
+                print('Duplicate result is: Possible Duplicate')
             else:
                 print('Duplicate result is: Not Duplicate')
 
