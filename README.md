@@ -18,7 +18,7 @@ The core assumption of this algorithm is that if it's a duplicate pair, most of 
 
 The duplicate checking algorithm is contributed to the IQuOD group.
 
-The codes need to be run with MATLAB and Python 3.
+The codes need to be run with Python 3.
 
 **A scientific paper introducing this algorithm could be found in Song et al., 2024.**
 
@@ -68,14 +68,14 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 
 <center> Table 1. The composition of DC_OCEAN <center/>
 
-| **Order** |             **Filename**              |                         **Comments**                         |
-| :-------: | :-----------------------------------: | :----------------------------------------------------------: |
-|     1     |   support/N00_read_data_metadata.py   |                   Preprocess the metadata                    |
+| **Order** |             **Filename**              |                                                **Comments**                                                 |
+| :-------: | :-----------------------------------: |:-----------------------------------------------------------------------------------------------------------:|
+|     1     |   support/N00_read_data_metadata.py   |                                           Preprocess the metadata                                           |
 |     2     |  support/N01_possible_duplicates.py   | Utilize fourteen distinct screening criteria to calculate the 'DNA' and identify potential duplicate pairs. |
-|     3     | M01_MAIN_check_nc_duplicate_manual.py | Determine whether the potential duplicates from N03 are the real duplicates or not by manually checking. |
-|     4     |  M02_MAIN_check_nc_duplicate_list.py  |         The same as Order 3, but in automatic check.         |
+|     3     | M01_MAIN_check_nc_duplicate_manual.py |  Determine whether the potential duplicates from N01 are the real duplicates or not by manually checking.   |
+|     4     |  M02_MAIN_check_nc_duplicate_list.py  |                                 The same as step 3, but in automatic check.                                 |
 
- For more details and interpreation of the codes above, please refer to Song et al., 2023, Frontier in Marine Science.
+ For more details and interpretation of the codes above, please refer to Song et al., 2023, Frontier in Marine Science.
 
  
 
@@ -91,8 +91,6 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 * scipy (=1.7.3)
 
 > Computer Memory: >8GB is obligatory.
->
-> MATLAB is needed to run the support codes.
 
 #### 3.2 Installing DC_OCEAN
 
@@ -701,7 +699,7 @@ The above data files can be viewed and modified using Excel.
 
 ## 5. Notes for WOD18 netCDF format
 
-In this algorithm, the input data and the data format **is strictly followed** WOD18 (World Ocean Database 2018) single netCDF file format. The format can be referenced [here]. The variables we used are shown in Table 3. 
+In this algorithm, the input data and the data format **is strictly followed** WOD18 (World Ocean Database 2018) single netCDF file format. The format can be referenced [[here](https://www.ncei.noaa.gov/access/world-ocean-database-select/netCDF_info.html#:~:text=netCDF%20is%20a%20format%20commonly,in%20its%20own%20netCDF%20file)]. The variables we used are shown in Table 3. 
 
 <u>**Therefore, if you need to use your custom format rather than using WOD18 format, please follow the Table 3 to customize your input netCDF files, otherwise the program will report many errors.**</u>
 
