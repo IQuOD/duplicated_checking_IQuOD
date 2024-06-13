@@ -7,43 +7,7 @@ During the process:
 The results are stored in npz format file.
 
 ***For data that is not in WOD18 netCDF format, it needs to be rewritten as WOD18 format firstly.
-The variables included in the WOD18 netCDF files and their order are (keep blank if there are no variables):
-Access_no
-Biology_Accno
-center_source
-COMS_id
-country
-crs
-dataset
-date
-Displacemnt_Vol_001
-GMT_sample_start_time
-lat
-Lge_removed
-lon
-Orig_Stat_Num
-originators_cruise_identifier
-Preservation
-Project
-Sampling_duration
-Taxon_count_002
-Taxon_count_003
-temp_QC_COMS
-Temperature
-Temperature_BOT_cor
-Temperature_sigfigs
-Temperature_WODflag
-Temperature_WODprofileflag
-time
-WOD_cruise_identifier
-wod_unique_cast
-WODf
-WODfd
-WODfp
-z
-z_BOT_cor
-z_sigfig
-z_WODflag
+***We have provided instructions in the user manual for data formats requirements.
 
 Usage:
     Run this script and follow the prompt to enter the directory path containing netCDF files.
