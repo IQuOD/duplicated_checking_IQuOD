@@ -41,7 +41,7 @@ def N02_1_DNA_check_standardize_line(DNA_series,filename_info):
     # Normalization: The data is normalized to data with a mean of 0 and a variance of 1
     DNA_series_copy = DNA_series.copy()
 
-    ###### 判断WMO_ID在那一列？
+    ###### Judging WMO_ID in which column?
     DNA_series_copy = np.delete(DNA_series_copy, 19, axis=1)  # Deleting the 20th column
 
     ###### standardizeData with mean as 0 and standard deviation as 1
