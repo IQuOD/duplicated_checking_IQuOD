@@ -7,7 +7,17 @@ During the process:
 The results are stored in npz format file.
 
 ***For data that is not in WOD18 netCDF format, it needs to be rewritten as WOD18 format firstly.
-***We have provided instructions in the user manual for data formats requirements.
+The variables included in the WOD18 netCDF files can be checked in Table 3 in the README.md
+
+we used the following metadata and secondly stat information to calculate the 'DNA' for each profiles
+meta_names = ['WOD_unique_id','accession_number', 'dataset_id', 'lat', 'lon', 'year', 'month', 'day', 'probe type',
+              'recorder', 'hour', 'minute', 'depth_number', 'maximum_depth', 'hasTemp', 'hasSalinity', 'hasOxygen',
+              'hasChlonophyll', 'country_name', 'GMT_time', 'WMO_ID', 'dbase_orig', 'project_name', 'Platform',
+              'ocean_vehicle', 'Institute', 'WOD_cruise_identifier', 'sum_temp', 'sum_salinity', 'sum_depth',
+              'std_depth', 'std_temp', 'std_salinity', 'corr_temp_depth', 'corr_sal_depth']
+The order in 'meta_names' CANNOT be modifed. Please strictly following this order. Keep NaN or set it as '' if this information is missing.
+
+Read the Section 5 of README file for customize your own netCDf file.
 
 Usage:
     Run this script and follow the prompt to enter the directory path containing netCDF files.
@@ -444,6 +454,7 @@ def read_netCDF_formatted_DNA_series(filepath):
 if __name__ == '__main__':
     # filepath = '../Input_files/WOD18_sample_1995/'
     filepath = input("Please enter the path to your netCDF files: ").lstrip().rstrip()
+    filepath = filepath.replace("\\", "\\\\")
     
     if validate_path(filepath):
         read_netCDF_formatted_DNA_series(filepath)
