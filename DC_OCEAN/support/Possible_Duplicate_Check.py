@@ -7,7 +7,7 @@
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
-### 2024-03-26	| Huifeng, Zhetao   |	1.0			|	Create
+### 2024-03-26	|                   |	1.0			|	Create
 ######################################################################
 
 """
@@ -38,9 +38,6 @@ def validate_file(input_path):
         return False
 
     return True
-
-
-
 
 ##### logical flow: see Figure 1 in the manuscrpt (standard 1)
 def N02_1_DNA_check_standardize_line(DNA_series,filename_info):

@@ -2,7 +2,7 @@
 
 Release v1.2
 
-Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS)
+Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Huifeng Yuan (CNIC/CAS)
 
 Contributors: International Quality-controlled Ocean Database (*IQuOD*) members
 
@@ -46,11 +46,11 @@ DC_OCEAN is an open-source Python library designed for detecting duplicate profi
 
 **The first component includes a total of 2 scripts:**
 
-(1) ./support/N00_read_data_metadata.py
+(1) Create_DNA_Summary.py
 
 This script aims at reading the metadata and other information from the original netCDF files (we use the WOD18 single netCDF format) and then preprocessing the metadata.
 
-(2) ./support/N01_possible_duplicates.py
+(2) Possible_Duplicate_Check.py
 
 This script aims at utilizing 14 distinct screening criteria to calculate the 'DNA' and identify possible duplicate pairs. The output is a possible duplicate pair list file (*.txt).
 
@@ -58,9 +58,9 @@ This script aims at utilizing 14 distinct screening criteria to calculate the 'D
 
 **The second component consists of two files:**
 
-(1) M01_MAIN_check_nc_duplicate_manual.py
+(1) Duplicate_Checker.py
 
-(2) M02_MAIN_check_nc_duplicate_list.py
+(2) Duplicate_Check.py
 
 
 
@@ -70,14 +70,31 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 
 | **Order** |             **Filename**              |                         **Comments**                         |
 | :-------: | :-----------------------------------: | :----------------------------------------------------------: |
-|     1     |   support/N00_read_data_metadata.py   |                   Preprocess the metadata                    |
-|     2     |  support/N01_possible_duplicates.py   | Utilize fourteen distinct screening criteria to calculate the 'DNA' and identify potential duplicate pairs. |
-|     3     | M01_MAIN_check_nc_duplicate_manual.py | Determine whether the potential duplicates from N03 are the real duplicates or not by manually checking. |
-|     4     |  M02_MAIN_check_nc_duplicate_list.py  |         The same as Order 3, but in automatic check.         |
+|     1     |   support/Create_DNA_Summary.py   |                   Preprocess the metadata                    |
+|     2     |  support/Possible_Duplicate_Check.py   | Utilize fourteen distinct screening criteria to calculate the 'DNA' and identify potential duplicate pairs. |
+|     3     | Duplicate_Checker.py | Determine whether the potential duplicates in the results of Possible_Duplicate_check.py are the real duplicates or not by manually checking and automatic check. |
+|     4     |  Duplicate_Check.py  |         The overall flow of duplicate check. It is the entry for the duplicate check program.         |
 
  For more details and interpreation of the codes above, please refer to Song et al., 2023, Frontier in Marine Science.
 
- 
+
+```flowchart
+st=>start: Begin
+op=>operation: Duplicate Check
+sub1=>subroutine: Checker
+subsub1=>subroutine: Create DNA Summary
+subsub2=>subroutine: Possible Duplicate Check
+subsub3=>subroutine: Mannul Check
+subsub4=>subroutine: Automatic Check
+cond=>condition: Mannual(yes) or Automatic(no)?
+e=>end: End
+st->op
+op->sub1(right)->subsub1->subsub2->cond
+cond(yes)->subsub3
+cond(no)->subsub4
+subsub3->e
+subsub4->e
+```
 
 ## 3. Installation
 
@@ -89,6 +106,7 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 * netCDF4 (= 1.5.5.1)
 * pandas (= 1.0.3)
 * scipy (=1.7.3)
+* argparse (=1.4.0)
 
 > Computer Memory: >8GB is obligatory.
 >
@@ -231,13 +249,14 @@ Here, we will use some *in-situ* observational profiles in 1995 downloaded from 
 
 ```shell
 cd <DC_ocean>/support
-python N00_read_data_metadata.py
+python Create_DNA_Summary.py
 ```
 
-Then, the following information is output:
+The acceptable input parameters are as follows:
 
 ```
-Please input the path that storge all netCDF files:
+-i or --input: the path that storge all netCDF file. The default value is <DC_ocean>/Input_files/WOD18_sample_1995
+-o or --output: the path that storge DNA_Summary.npz. The default value is <DC_ocean>/Input_files
 ```
 
 Here, we input the sample 1995 WOD18 netCDF files to test:
@@ -261,6 +280,11 @@ Processing file 1883/1883: wod_007275397O.nc
 The DNA formatted file are output to current folder: ../Input_files
 
 The DNA filename is: ../Input_files/DNA_summary.npz
+```
+
+If a file with the same name already exists in the output path, you will be prompted as shown below, select it as needed..
+```
+Update DNA Summary or not(1: Yes (default); 0: No): 
 ```
 
 In this script, we will preprocesses the profile data and metadata, employing ASCII to transform character (string) variables into numerical variables. This process generates the `../Input_files/DNA_summary.npz` file. You'll find three variables in this npz file: `DNA_series`, `filename_info`, and `variable_name`.

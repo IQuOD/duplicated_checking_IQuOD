@@ -7,7 +7,7 @@
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
-### 2024-03-26	| Huifeng, Zhetao   |	1.0			|	Create
+### 2024-03-26	|                   |	1.0			|	Create
 ######################################################################
 
 import os
@@ -52,14 +52,20 @@ class DuplicateChecker(object):
         # Create_DNA_Summary
         if(not self.validate_path(InputDir) or self.validate_path(OutputDir)):
             print("The entered path is not valid. Please ensure the path is correct and try again.")
+            raise Exception("Invalid InputDir or OutputDir!", InputDir, OutputDir)
         
         print(InputDir)
         print(OutputDir)
-        Create_DNA_Summary.read_netCDF_formatted_DNA_series(InputDir, OutputDir)
-        
-        print("DNA_summary.npz Complete !")
-
         DNA_summary_filename = OutputDir + "/DNA_summary.npz"
+        iAct = 1
+        if os.path.exists(DNA_summary_filename):
+            iAct = input("Update DNA Summary or not(1: Yes (default); 0: No): ")
+            print(iAct)
+
+        if (iAct == 1):
+            Create_DNA_Summary.read_netCDF_formatted_DNA_series(InputDir, OutputDir)
+            print("DNA_summary.npz Complete !")
+
         # Possible_Duplicate_Check
         if self.validate_file(DNA_summary_filename):
             All_possible_duplicate_list = Possible_Duplicate_Check.main(DNA_summary_filename)
@@ -67,6 +73,7 @@ class DuplicateChecker(object):
             print('SUCCESSFULLY run the crude screen check!!')
         else:
             print("The entered path is not valid. Please enter the path to your DNA summary files (*.npz).")
+            raise Exception("Invalid DNA Summary!")
 
     def duplicate_checke_manual(self, netCDF_filepath):
         while True:

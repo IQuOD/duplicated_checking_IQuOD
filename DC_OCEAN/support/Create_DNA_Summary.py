@@ -7,7 +7,7 @@
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
-### 2024-03-26	| Huifeng, Zhetao   |	1.0			|	Create
+### 2024-03-26	|                   |	1.0			|	Create
 ######################################################################
 
 
@@ -481,7 +481,14 @@ if __name__ == '__main__':
     isOutputOK = validate_path(OutputDir)
     if(not (isInputOK and isOutputOK)):
         print("The entered path is not valid. Please ensure the path is correct and try again.")
+        raise Exception("Invalid InputDir or OutputDir!", InputDir, OutputDir)
     
-    read_netCDF_formatted_DNA_series(InputDir, OutputDir)
-    
-    print("DNA_summary.npz Complete !")
+    DNA_summary_filename = OutputDir + "/DNA_summary.npz"
+    iAct = 1
+    if os.path.exists(DNA_summary_filename):
+        iAct = input("Update DNA Summary or not(1: Yes (default); 0: No): ")
+        print(iAct)
+
+    if (iAct == 1):
+        read_netCDF_formatted_DNA_series(InputDir, OutputDir)
+        print("DNA_summary.npz Complete !")
