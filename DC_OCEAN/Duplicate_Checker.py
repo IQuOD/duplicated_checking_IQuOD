@@ -75,6 +75,11 @@ class DuplicateChecker(object):
             print("The entered path is not valid. Please enter the path to your DNA summary files (*.npz).")
             raise Exception("Invalid DNA Summary!")
 
+    '''
+        This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
+        input data: the txt file output from the ./support/N01_possible_duplicates.py
+        output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
+    '''
     def duplicate_checke_manual(self, netCDF_filepath):
         while True:
             print('---------Please input two netCDF files which are potential duplicates--------')
@@ -118,6 +123,11 @@ class DuplicateChecker(object):
             else:
                 print('Duplicate result is: Not Duplicate')
 
+    """
+        This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
+        input data: the txt file output from the ./support/N01_possible_duplicates.py
+        output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
+    """
     def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
 
         ### Read potential_files_txt
