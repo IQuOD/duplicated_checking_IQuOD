@@ -6,10 +6,10 @@ with open("README.md",'r',encoding='utf-8') as fh:
 
 setuptools.setup(
     name="DC_OCEAN",
-    version="1.2",
+    version="1.3",
     author ="Zhetao Tan; Xinyi Song; Lijing Cheng",
     author_email = "tanzhetao@mail.iap.ac.cn; songxinyi231@mails.ucas.ac.cn",
-    description = "An algorithm to detect the ocean in-situ duplicate profiles (Song et al., 2024, FMS)",
+    description = "DC_OCEAN: An algorithm to detect the ocean in-situ duplicate profiles (Song et al., 2024, FMS)",
     long_description = long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/IQuOD/duplicated_checking_IQuOD/",
@@ -21,6 +21,6 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=['numpy >= 1.19.1','netCDF4 >= 1.5.4','timezonefinder >=6.0.1','pandas >=1.0.3','scipy >=1.7.3'],
+    install_requires=['numpy >= 1.19.1','netCDF4 >= 1.5.4','timezonefinder >=6.0.1','pandas >=1.0.3','scipy >=1.7.3','argpars >=1.4.0'],
     python_requires='>=3.7',
 )
