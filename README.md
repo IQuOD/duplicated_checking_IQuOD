@@ -77,25 +77,6 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 
  For more details and interpreation of the codes above, please refer to Song et al., 2023, Frontier in Marine Science.
 
-
-```flowchart
-st=>start: Begin
-op=>operation: Duplicate Check
-sub1=>subroutine: Checker
-subsub1=>subroutine: Create DNA Summary
-subsub2=>subroutine: Possible Duplicate Check
-subsub3=>subroutine: Mannul Check
-subsub4=>subroutine: Automatic Check
-cond=>condition: Mannual(yes) or Automatic(no)?
-e=>end: End
-st->op
-op->sub1(right)->subsub1->subsub2->cond
-cond(yes)->subsub3
-cond(no)->subsub4
-subsub3->e
-subsub4->e
-```
-
 ## 3. Installation
 
 #### 3.1 Requirement packages
