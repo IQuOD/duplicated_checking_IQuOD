@@ -491,9 +491,9 @@ if __name__ == '__main__':
     PSS_summary_filename = OutputDir + "/Profile_Summary_Score_list.npz"
     iAct = 1
     if os.path.exists(PSS_summary_filename):
-        iAct = input("Update Profile Summary Score list or not(1: Yes (default); 0: No): ")
+        iAct = input("Update Profile Summary Score list or not(1: Yes (default); 0: No): ") or 1
         print(iAct)
 
-    if (iAct == 1):
+    if (iAct == 1 or iAct == '1'):
         read_netCDF_formatted_PSS_series(InputDir, OutputDir)
         print("Profile_Summary_Score_list.npz Complete !")
