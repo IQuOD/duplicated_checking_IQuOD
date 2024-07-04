@@ -7,7 +7,9 @@
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
-### 2024-03-26	|                   |	1.0			|	Create
+### 2024-03-26	|                   |	1.1			|	Create
+### 2024-06-01	|                   |	1.2			|	Create
+### 2024-07-04	|                   |	1.3			|	Create
 ######################################################################
 
 import os
@@ -17,9 +19,8 @@ import numpy as np
 import math
 from util import country_table as t_country
 from util import compair_main as compair_main
-from support import Create_DNA_Summary
-from support import Possible_Duplicate_Check
-
+from support import N00_Create_Profile_Summary_Score
+from support import N01_Possible_Duplicate_Check
 import warnings
 warnings.filterwarnings('ignore')
 warnings
@@ -49,35 +50,35 @@ class DuplicateChecker(object):
         return True
 
     def InitEnvironment(self, InputDir, OutputDir):
-        # Create_DNA_Summary
-        if(not self.validate_path(InputDir) or self.validate_path(OutputDir)):
+        # N00_Create_Profile_Summary_Score
+        if not(self.validate_path(InputDir)) or not(self.validate_path(OutputDir)):
             print("The entered path is not valid. Please ensure the path is correct and try again.")
             raise Exception("Invalid InputDir or OutputDir!", InputDir, OutputDir)
         
         print(InputDir)
         print(OutputDir)
-        DNA_summary_filename = OutputDir + "/DNA_summary.npz"
+        PSS_summary_filename = OutputDir + "/Profile_Summary_Score_list.npz"
         iAct = 1
-        if os.path.exists(DNA_summary_filename):
-            iAct = input("Update DNA Summary or not(1: Yes (default); 0: No): ")
+        if os.path.exists(PSS_summary_filename):
+            iAct = input("Update Profile Summary Score list or not(1: Yes (default); 0: No): ")
             print(iAct)
 
         if (iAct == 1):
-            Create_DNA_Summary.read_netCDF_formatted_DNA_series(InputDir, OutputDir)
-            print("DNA_summary.npz Complete !")
+            N00_Create_Profile_Summary_Score.read_netCDF_formatted_PSS_series(InputDir, OutputDir)
+            print("Profile_Summary_Score_list.npz Complete !")
 
-        # Possible_Duplicate_Check
-        if self.validate_file(DNA_summary_filename):
-            All_possible_duplicate_list = Possible_Duplicate_Check.main(DNA_summary_filename)
-            Possible_Duplicate_Check.save_txt_duplicate_list(All_possible_duplicate_list, DNA_summary_filename)
+        # N01_Possible_Duplicate_Check
+        if self.validate_file(PSS_summary_filename):
+            All_possible_duplicate_list = N01_Possible_Duplicate_Check.main(PSS_summary_filename)
+            N01_Possible_Duplicate_Check.save_txt_duplicate_list(All_possible_duplicate_list, PSS_summary_filename)
             print('SUCCESSFULLY run the crude screen check!!')
         else:
-            print("The entered path is not valid. Please enter the path to your DNA summary files (*.npz).")
-            raise Exception("Invalid DNA Summary!")
+            print("The entered path is not valid. Please enter the path to your Profile_Summary_Score_list files (*.npz).")
+            raise Exception("Invalid Profile_Summary_Score_list!")
 
     '''
         This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
-        input data: the txt file output from the ./support/N01_possible_duplicates.py
+        input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
         output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
     '''
     def duplicate_checke_manual(self, netCDF_filepath):
@@ -124,8 +125,8 @@ class DuplicateChecker(object):
                 print('Duplicate result is: Not Duplicate')
 
     """
-        This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
-        input data: the txt file output from the ./support/N01_possible_duplicates.py
+        This program is used to determine whether the potential duplicate pairs quickly identified in the N01 step are actually duplicated, and if so, output
+        input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
         output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
     """
     def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
@@ -212,8 +213,10 @@ class DuplicateChecker(object):
                         print(file1+' v.s. '+file2+': No Duplicate')
 
                 del isDuplicated
-
-        print("duplicate_number: " + str(duplicate_number))  
+        print('\n\n')
+        print('***************FINISHED********************')
+        print("duplicate_number: " + str(duplicate_number))
+        print('\n')
         print("Two files output: "+potential_output_unduplicate_path +' and '+potential_output_path)
         print("Finished!")
 
