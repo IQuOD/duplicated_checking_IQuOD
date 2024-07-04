@@ -80,11 +80,11 @@ def standardizeData(data, targetMean, targetStd):
     return standardizedData
 
 
-def entropy_weight(DNA_series):
-    DNA_mapped = normalizeData(DNA_series, 0, 1)
-    DNA_mapped[DNA_series == 0] = 0
+def entropy_weight(PSS_series):
+    PSS_mapped = normalizeData(PSS_series, 0, 1)
+    PSS_mapped[PSS_series == 0] = 0
 
-    B = DNA_mapped.copy()
+    B = PSS_mapped.copy()
     B[B == 0] = 0.00001
     B[B == 1] = 0.99999
 
@@ -109,20 +109,20 @@ def entropy_weight(DNA_series):
     s = 100 * np.dot(weight, B.T)
     return weight, s
 
-def PCA_DNA_profiles(DNA_series,threshold=0.9):
+def PCA_PSS_profiles(PSS_series,threshold=0.9):
     """
-    Perform PCA on DNA profile data and reduce dimensionality based on 90% variance threshold.
+    Perform PCA on PSS profile data and reduce dimensionality based on 90% variance threshold.
 
     Parameters:
-    DNA_series_copy (numpy.ndarray): The input DNA series data.
+    PSS_series_copy (numpy.ndarray): The input PSS series data.
 
     Returns:
-    numpy.ndarray: The reduced DNA profile data based on PCA.
+    numpy.ndarray: The reduced PSS profile data based on PCA.
     """
     import numpy as np
     from scipy.stats import zscore
     
-    z = zscore(DNA_series,axis=0)
+    z = zscore(PSS_series,axis=0)
     z = np.nan_to_num(z, nan=0.0)
 
     # Compute covariance matrix
@@ -142,6 +142,6 @@ def PCA_DNA_profiles(DNA_series,threshold=0.9):
     num_components = np.where(cumulative_variance / total_variance >= threshold)[0][0] + 1
 
     # Project the normalized data onto the retained eigenvectors
-    DNA_new = np.dot(z, sorted_eigenvectors[:, :num_components])
+    PSS_new = np.dot(z, sorted_eigenvectors[:, :num_components])
 
-    return DNA_new
+    return PSS_new
