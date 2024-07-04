@@ -553,7 +553,7 @@ Here, we will use some *in-situ* observational profiles in 1995 downloaded from 
 Ensure all necessary dependencies are installed. You can run the MAIN files `M00_Duplicate_Check_MAIN.py` using the following command:
 
 ```shell
-python M00_Duplicate_Check_MAIN.py -i <input_directory> -o <output_directory> -d <PSS_directory> -m <mode>
+python M00_Duplicate_Check_MAIN.py [-i <input_directory>] [-o <output_directory>] [-d <PSS_directory>] [-m <mode>]
 ```
 
 **Parameter Description:**
@@ -563,7 +563,7 @@ python M00_Duplicate_Check_MAIN.py -i <input_directory> -o <output_directory> -d
 - `-d, --PSSfolder`: Path to the Profile Summary Score directory (default: `Input_files`).
 - `-m, --mode`: Execuation mode (default: 0)
   - `0`: Automatically duplicate checking mode (List)
-  - `1`: Manual duplicate  checking mode
+  - `1`: Manual duplicate checking mode
 
 **Example #1:** To run the code with the default parameters:
 
@@ -613,7 +613,6 @@ python M00_Duplicate_Check_MAIN.py -i /path/to/input -o /path/to/output -d /path
 ```
 
 In this example, the input directory and output directory are entered via argument passing.
-
 
 
 ## 6. Notes for WOD18 netCDF format
