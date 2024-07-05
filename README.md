@@ -2,7 +2,7 @@
 
 Release v1.3
 
-Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Huifeng Yuan (CNIC/CAS)
+Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Lijing Cheng (IAP/CAS)
 
 Contributors: International Quality-controlled Ocean Database (*IQuOD*) members
 
@@ -609,17 +609,19 @@ Then, it will return the result similar as Section 3.
 **Example #3:** To specify custom all parameters:
 
 ```
-python M00_Duplicate_Check_MAIN.py -i /path/to/input -o /path/to/output -d /path/to/pss -m 0
+python M00_Duplicate_Check_MAIN.py -i /path/to/input -o /path/to/output -m 0
 ```
 
-In this example, the input directory and output directory are entered via argument passing.
+In this example, the input directory and output directory **are entered via argument passing.**
+
+
 
 
 ## 6. Notes for WOD18 netCDF format
 
 In this algorithm, the input data and the data format **is followed** WOD18 (World Ocean Database 2018) single netCDF file format. The format can be referenced [here](https://www.ncei.noaa.gov/access/world-ocean-database/wod-codes.html#second). The variables we used are shown in Table 3. 
 
-Here, we also provide a *cdl file [here](https://github.com/IQuOD/duplicated_checking_IQuOD/blob/main/ocean_data_netCDF_format.cdl) for user to build an input file. <u>**Therefore, if you need to use your custom format rather than using WOD18 format, please follow the *cdl file to customize your input netCDF files, otherwise the program will report many errors.**</u>
+Here, we also provide a *.cdl file [here](https://github.com/IQuOD/duplicated_checking_IQuOD/blob/main/ocean_data_netCDF_format.cdl) for user to build an input file. <u>**Therefore, if you need to use your custom format rather than using WOD18 format, please follow the *cdl file to customize your input netCDF files, otherwise the program will report many errors.**</u>
 
 > Note: If a specific data field does not have information (i.e., the data on your side doesn't contain the information/value of this specific data field), please set it to its default value.
 
@@ -653,7 +655,7 @@ Here, we also provide a *cdl file [here](https://github.com/IQuOD/duplicated_che
 
 
 
-The *cdl file is attached here:
+The *.cdl file is attached here:
 
 ```shell
 netcdf sample {
