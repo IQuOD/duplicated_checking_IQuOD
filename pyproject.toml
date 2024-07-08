@@ -1,0 +1,78 @@
+[build-system]
+requires = [
+  "setuptools >= 61",
+  "setuptools_scm[toml] >= 8",
+]
+build-backend = 'setuptools.build_meta'
+
+[project]
+name="DC_OCEAN"
+dynamic = ["version"]
+description = "DC_OCEAN: An algorithm to detect the ocean in-situ duplicate profiles (Song et al., 2024, FMS)"
+readme = "README.md"
+authors = [
+  {name = "Zhetao Tan", email = "tanzhetao@mail.iap.ac.cn"},
+  {name = "Xinyi Song", email = "songxinyi231@mails.ucas.ac.cn"},
+  {name = "Lijing Cheng"},
+]
+maintainers = [
+  {name = "Zhetao Tan", email = "tanzhetao@mail.iap.ac.cn"},
+]
+keywords = ["oceanography", "duplicate", "quality control"]
+requires-python = ">= 3.7"
+classifiers=[
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+	"License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "numpy>=1.19.1",
+	"netCDF4>=1.5.4",
+	"timezonefinder>=6.0.1",
+	"pandas>=1.0.3",
+	"scipy>=1.7.3",
+	"argparse>=1.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build>=0.6",
+]
+doc = [
+  "ghp-import>=2.1",
+  "numpydoc>=1.6",
+  "pandoc>=2.3",
+  "sphinx>=7.2",
+]
+test = [
+  "pytest>=7.0",
+  "pytest-cov>=3.0",
+  "pytest-xdist>=3.0",
+]
+
+
+[project.urls]
+homepage = "https://github.com/IQuOD/duplicated_checking_IQuOD/"
+repository = "https://github.com/IQuOD/duplicated_checking_IQuOD/"
+
+[tool.ruff]
+line-length = 79
+target-version = "py37"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.setuptools]
+packages = ["DC_OCEAN"]
+
+[tool.setuptools_scm]
+version_file = "DC_OCEAN/_version.py"
