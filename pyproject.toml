@@ -76,3 +76,25 @@ packages = ["DC_OCEAN"]
 
 [tool.setuptools_scm]
 version_file = "DC_OCEAN/_version.py"
+
+[tool.pixi.project]
+channels = ["conda-forge", "anaconda", "main"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+DC_OCEAN = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+doc = { features = ["doc"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+numpy = ">=1.19.1"
+netcdf4 = ">=1.5.4"
+timezonefinder = ">=6.0.1"
+pandas = ">=1.0.3"
+scipy = ">=1.7.3"
