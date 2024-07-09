@@ -1,4 +1,4 @@
-# Duplicated_checking_IQuOD (DC_OCEAN)
+# DC_OCEAN: An open-source algorithm for identification of duplicates in ocean databases
 
 Release v1.3
 
