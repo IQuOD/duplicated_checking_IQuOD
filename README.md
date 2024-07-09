@@ -1,6 +1,6 @@
 # DC_OCEAN: An open-source algorithm for identification of duplicates in ocean databases
 
-Release v1.3
+Release v1.3.1
 
 Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
 
