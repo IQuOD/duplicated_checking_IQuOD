@@ -2,7 +2,7 @@
 
 Release v1.3
 
-Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Lijing Cheng (IAP/CAS), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
+Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
 
 Contributors: International Quality-controlled Ocean Database (*IQuOD*) members
 
