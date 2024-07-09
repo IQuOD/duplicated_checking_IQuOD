@@ -1,8 +1,8 @@
-![image](https://github.com/IQuOD/duplicated_checking_IQuOD/assets/49977001/c630d5a3-ee71-4d9b-af48-b5fc9729a5a0)![image](https://github.com/IQuOD/duplicated_checking_IQuOD/assets/49977001/fc720e23-3deb-49a4-8b12-a88bed018dd8)![image](https://github.com/IQuOD/duplicated_checking_IQuOD/assets/49977001/76d92095-7ca8-42b7-bde5-1d755d1bc797)![image](https://github.com/IQuOD/duplicated_checking_IQuOD/assets/49977001/fcab72a0-40f3-4c72-a965-cb8f90d07697)# Duplicated_checking_IQuOD (DC_OCEAN)
+# Duplicated_checking_IQuOD (DC_OCEAN)
 
 Release v1.3
 
-Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Lijing Cheng (IAP/CAS), Simona Simoncelli (INGV), Shoichi Kizu (JMA), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
+Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Lijing Cheng (IAP/CAS), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
 
 Contributors: International Quality-controlled Ocean Database (*IQuOD*) members
 
