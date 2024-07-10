@@ -71,7 +71,12 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.setuptools]
+include-package-data = true
 packages = ["DC_OCEAN"]
+
+[tool.setuptools.package-data]
+mypkg = ["*.txt", "*.rst"]
+DC_OCEAN = ['util/*','support/*.py','tests/Examples_netCDF_files/*','Input_files/WOD18_sample_1995/*','Input_files/*.txt','tests/*.py']
 
 [tool.setuptools_scm]
 version_file = "DC_OCEAN/_version.py"
