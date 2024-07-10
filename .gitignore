@@ -1,0 +1,10 @@
+# Dynamic version
+DC_OCEAN/_version.py
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# pixi environments
+.pixi
+*.egg-info
