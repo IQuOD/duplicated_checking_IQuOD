@@ -81,7 +81,7 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 
 #### 3.1 Requirement packages
 
-* Python 3 (>=3.7)
+* Python 3 (>=3.8)
 * numpy (= 1.19.1)
 * timezonefinder (= 6.0.1)
 * netCDF4 (= 1.5.5.1)
