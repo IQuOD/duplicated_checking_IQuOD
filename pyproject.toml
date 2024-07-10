@@ -10,6 +10,7 @@ name="DC_OCEAN"
 dynamic = ["version"]
 description = "DC_OCEAN: An algorithm to detect the ocean in-situ duplicate profiles (Song et al., 2024, FMS)"
 readme = "README.md"
+license = {file = "LICENSE"}
 authors = [
   {name = "Zhetao Tan", email = "tanzhetao@mail.iap.ac.cn"},
   {name = "Xinyi Song", email = "songxinyi231@mails.ucas.ac.cn"},
