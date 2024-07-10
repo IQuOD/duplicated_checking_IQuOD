@@ -64,7 +64,7 @@ repository = "https://github.com/IQuOD/duplicated_checking_IQuOD/"
 
 [tool.ruff]
 line-length = 79
-target-version = "py37"
+target-version = "py38"
 
 [tool.ruff.format]
 quote-style = "double"
