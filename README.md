@@ -4,7 +4,7 @@ Release v1.3.1
 
 Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
 
-Contributors: International Quality-controlled Ocean Database (*IQuOD*) members
+International Quality-controlled Ocean Database (*IQuOD*)
 
 Institute of Atmospheric Physics, Chinese Academy of Sciences (IAP/CAS)
 
@@ -94,7 +94,7 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 
 #### 3.2 Installing DC_OCEAN
 
-Now the 'DC_OCEAN' package is uploaded to pypi (https://pypi.org/project/DC-OCEAN/1.3). For those of you interested, you can easily and freely access via 'pip' with the following steps:
+Now the 'DC_OCEAN' package is uploaded to pypi (https://pypi.org/project/DC-OCEAN/1.3.1). For those of you interested, you can easily and freely access via 'pip' with the following steps:
 
 **Step1: Using pip to quickly install**
 
@@ -802,7 +802,7 @@ IQuOD project and Task Team Duplicates: https://www.iquod.org/about.html
 
 **For more information about the DC_OCEAN (performance evaluation, scientific application)**, please refer to:
 
-> X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, G. Castelao, V. Gouretski, L. Cheng, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*
+> X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, H. Yuan, G. Castelao, V. Gouretski, L. Cheng*, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science* (under review)
 
 ## 8. License
 
@@ -812,9 +812,9 @@ IQuOD project and Task Team Duplicates: https://www.iquod.org/about.html
 
 Please **REMEMBER** to cite this study if you use DC_OCEAN for any purposes:
 
-**[1]** X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, G. Castelao, V. Gouretski, L. Cheng, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*
+**[1]** X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, H. Yuan, G. Castelao, V. Gouretski, L. Cheng*, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*
 
-**[2]** Tan, Z., Song, X, Cowley, R, Yuan H. (2024) IQuOD/duplicated_checking_IQuOD: DC_OCEAN (DC_OCEAN). Zenodo. https://doi.org/10.5281/zenodo.10689637
+**[2]** Zhetao Tan, Xinyi Song, Huifeng Yuan, & Rebecca Cowley. (2024). IQuOD/duplicated_checking_IQuOD: v1.3.1 (v1.3.1). Zenodo. https://doi.org/10.5281/zenodo.12697240
 
 ## 10. Acknowledgment
 
@@ -839,4 +839,4 @@ If you have any questions, suggestions, or come across any bugs in the program, 
 * November 2023: Issued DC_OCEAN Python package (v1.0).
 * March 2024: Issued DC_OCEAN Python package (v1.1) and linked the package to the Zenodo.
 * May 2024: Issued DC_OCEAN Python package (v1.2)
-* July 2024: Code encapsulation and framework enhancement, issue DC_OCEAN Python package (v1.3)
+* July 2024: Code encapsulation and framework enhancement, issue DC_OCEAN Python package (v1.3.1)
