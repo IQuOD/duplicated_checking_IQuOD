@@ -22,5 +22,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=['numpy >= 1.19.1','netCDF4 >= 1.5.4','timezonefinder >=6.0.1','pandas >=1.0.3','scipy >=1.7.3','argparse >=1.4.0'],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
 )
