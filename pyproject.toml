@@ -12,12 +12,14 @@ description = "DC_OCEAN: An algorithm to detect the ocean in-situ duplicate prof
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
-  {name = "Zhetao Tan", email = "tanzhetao@mail.iap.ac.cn"},
+  {name = "Zhetao Tan", email = "tanzhetao19@mails.ucas.ac.cn"},
   {name = "Xinyi Song", email = "songxinyi231@mails.ucas.ac.cn"},
-  {name = "Lijing Cheng"},
+  {name = "Lijing Cheng"},{name = "Rebecca Cowley"}, {name = "Huifeng Yuan"}, {name = "Guilherme Castelao"},
+  {name = "Simona Simoncelli"}, {name = "Shoichi Kizu"},{name = "Shoichi Kizu"},{name = "Ricardo Locarnini"},
+  {name = "Tim Boyer"}, {name = "Franco Reseghetti"}, {name = "Viktor Gouretski"}
 ]
 maintainers = [
-  {name = "Zhetao Tan", email = "tanzhetao@mail.iap.ac.cn"},
+  {name = "Zhetao Tan", email = "tanzhetao19@mails.ucas.ac.cn"},
 ]
 keywords = ["oceanography", "duplicate", "quality control"]
 requires-python = ">= 3.8"
