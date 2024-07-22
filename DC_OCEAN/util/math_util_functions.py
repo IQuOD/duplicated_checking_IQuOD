@@ -81,6 +81,13 @@ def standardizeData(data, targetMean, targetStd):
 
 
 def entropy_weight(PSS_series):
+    """
+       Parameters:
+           PSS_series_copy (numpy.ndarray): The input PSS series data.
+
+       Returns:
+           numpy.ndarray: weight
+       """
     PSS_mapped = normalizeData(PSS_series, 0, 1)
     PSS_mapped[PSS_series == 0] = 0
 
