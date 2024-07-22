@@ -19,7 +19,7 @@ We set up 14 criteria (14 checks) to identify the maximum number of possible dup
 Usage:
     Run this script and follow the prompt to enter the directory path containing netCDF files.
     
-PSS = profile summary score (see Song et al., 2024;Frontier in Mairne Science)
+PSS = profile summary score (see Song et al., 2024;Frontier in Marine Science)
 
 """
 
@@ -34,16 +34,18 @@ except:
     from util import math_util_functions as math_util_functions
 import argparse
 
+# Used to determine whether the input path is correct
 def validate_file(input_path):
     # Normalize the path
     normalized_path = os.path.normpath(input_path)
 
-    # Check if the fiile exists
+    # Check if the file exists
     if not os.path.exists(normalized_path):
         return False
 
     return True
 
+##### Crude screening check
 ##### logical flow: see Figure 1 in the manuscrpt (standard 1)
 def N02_1_PSS_check_standardize_line(PSS_series,filename_info):
     '''
@@ -1370,7 +1372,7 @@ def main(PSS_summary_filename):
 
     return All_possible_duplicate_list
 
-
+# Storing potential duplicates
 def save_txt_duplicate_list(All_possible_duplicate_list,PSS_summary_filename):
     ### write the possible_duplicate_list to text file
     [script_directory,_]=os.path.split(PSS_summary_filename)

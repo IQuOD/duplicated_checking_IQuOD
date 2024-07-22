@@ -57,7 +57,7 @@ def validate_path(input_path):
 
     return True
 
-
+#Read NetCDF files and pre-processing metadata and secondary processing data. Retain numerical metadata and convert string metadata into numerical values by using the ASCII code table and then summing these ASCII code values of each letter to obtain a single value.
 def read_netCDF_formatted_PSS_series(inputpath, outputpath):
 
     warnings.filterwarnings("ignore")
