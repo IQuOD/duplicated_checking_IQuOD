@@ -47,6 +47,7 @@ import warnings
 import sys
 import argparse
 
+## Used to determine whether the input path is correct
 def validate_path(input_path):
     # Normalize the path
     normalized_path = os.path.normpath(input_path)
