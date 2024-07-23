@@ -16,7 +16,7 @@ It utilizes a 'DNA' method, which assigns a 'DNA' to each profile using primary 
 
 The core assumption of this algorithm is that if it's a duplicate pair, most of the metadata and observational data will be identical.
 
-The duplicate checking algorithm is contributed to the IQuOD group.
+The duplicate checking algorithm can support various groups including IQuoD, IAP/CAS, WOD/NCEI, CODC etc.
 
 The codes need to be run with MATLAB and Python 3.
 
@@ -30,15 +30,15 @@ DC_OCEAN is an open-source Python library designed for detecting duplicate profi
 
 * **DC_OCEAN** represents the first open-source software package for checking duplicate ocean observation profiles.
 
-* The performance and robustness of **DC_OCEAN** have been meticulously analyzed and evaluated in a scientific peer-reviewed journal (refer to Song et al., 2024; FMS).
-* As part of the contribution to the International Quality-controlled Ocean Database (IQuOD ) Task Team, specifically the Duplicate Checking Task Team, the **DC_OCEAN** has been adopted and recommended by IQuOD.
+* The performance and robustness of **DC_OCEAN** have been thoroughly analyzed and evaluated in a scientific peer-reviewed journal (refer to Song et al., 2024; FMS).
+* This software also partly contributes to the International Quality-controlled Ocean Database (IQuOD ) Task Team, specifically the Duplicate Checking Task Team, the **DC_OCEAN** has been adopted and recommended by IQuOD.
 * **DC_OCEAN** utilizes 'DNA' algorithms, which employ mathematical, statistical methods like the entropy weight method and principal component analysis to establish a unique 'DNA' for each profile. This approach offers greater flexibility in comparisons and significantly reduces the time complexity of the screening process, all while ensuring screening accuracy.
 
 #### 2.1 Composition for DC_OECAN
 
 **The DC_OCEAN is composed of two main components:**
 
-* **The first component** involves the preprocessing of metadata by calculating their corresponding 'DNA' for each profile. These files are stored in the 'support' folder.
+* **The first component** involves the processing of metadata by calculating their corresponding 'DNA' for each profile. These files are stored in the 'support' folder.
 
 * **The second component** is the core program of DC_OCEAN, designed to determine whether potential duplicate pairs are real duplicates or not.
 
@@ -48,7 +48,7 @@ DC_OCEAN is an open-source Python library designed for detecting duplicate profi
 
 (1) N00_Create_Profile_Summary_Score.py
 
-This script aims at reading the metadata and secondary information from the original netCDF files (we use the WOD18 single netCDF format) and then preprocessing the metadata to create a  Profile Summary Score (PSS) list.
+This script aims at reading the metadata and secondary information from the original netCDF files (we use the WOD18 single netCDF format) and then processing the metadata to create a Profile Summary Score (PSS) list.
 
 (2) N01_Possible_Duplicate_Check.py
 
@@ -118,7 +118,7 @@ pip install DC_OCEAN-1.3-py3-none-any.whl
 
 **Step 2: Make a first and easiest QC test.** 
 
-Here, we provide a **demo**. Now, you can make a first and most effortless test to check whether the DC_OCEAN package works well.
+Here, we provide a **demo**. Now, you can make a first try with this test to check whether the DC_OCEAN package works well.
 
 Launch your Python 3
 
@@ -129,7 +129,7 @@ cd <DC_OCEAN path>/tests
 python3 Example1_check_nc_duplicate_demo.py
 ```
 
-Then, the following information is output:
+Then, the following information outputs:
 
 ```shell
 ---------Please input two netCDF files which are potential duplicates--------
@@ -221,7 +221,7 @@ Now, you can get started with DC_OCEAN!
 
 #### 4.1  support files to calculate the Profile Summary Score and possible duplicates list 
 
-In this step, we will preprocesses the profile data and metadata, employing ASCII to transform character (string) variables into numerical variables. This process generates the `../Input_files/Profile_Summary_Score_list.npz` file. You'll find three variables in this npz file: `PSS_series`, `filename_info`, and `variable_name`.
+In this step, we will pre-processes the profiles and metadata, using ASCII to convert character (string) variables into numerical values. This process generates the `../Input_files/Profile_Summary_Score_list.npz` file. You'll find three variables in this npz file: `PSS_series`, `filename_info`, and `variable_name`.
 
 ```shell
 cd <DC_ocean>/support
@@ -243,7 +243,7 @@ python N00_Create_Profile_Summary_Score.py -i <DC_ocean>/Input_files/WOD18_sampl
 
 > **Please replace the '<DC_ocean>' to the DC_OCEAN installed path.**
 >
-> Due to the upload limitation in the GitHub repository, the <DC_ocean>/Input_files/WOD18_sample_1995 only contains less than 200 netCDF files. To test as much as possible netCDF files, **please download manually the compressed files** [here]([https://github.com/IQuOD/duplicated_checking_IQuOD/blob/main/WOD18_sample_1995.zip), and uncompress it to the `<DC_ocean>/Input_files/WOD18_sample_1995` path
+> Due to the upload limitation in the GitHub repository, the <DC_ocean>/Input_files/WOD18_sample_1995 only contains less than 200 netCDF files. To test as much as possible netCDF files, **you can download the compressed files of the full data from** [here]([https://github.com/IQuOD/duplicated_checking_IQuOD/blob/main/WOD18_sample_1995.zip), and uncompress it to the `<DC_ocean>/Input_files/WOD18_sample_1995` path
 
 If return the following result, congratulations!! The first step works well.
 
@@ -264,7 +264,7 @@ The Profile Summary Score filename is: <DC_ocean>\Input_files\Profile_Summary_Sc
 Profile_Summary_Score_list.npz Complete !
 ```
 
-If a file with the same name already exists in the output path, you will be prompted as shown below, select it as needed.
+If a file with the same name already exists in the output path, the following question will go out, please give an answer.
 ```
 Update DNA Summary or not(1: Yes (default); 0: No): 
 ```
@@ -338,14 +338,14 @@ This program aims to use the knowledge of physical oceanography and the expert e
 
 ##### 4.2.1 Manual check: `DuplicateCheckeManual`
 
-Using `DuplicateCheckeManual` in  `Duplicate_Checker.py` enables a manual check, providing a side-by-side comparison of metadata information between potential duplicate and unduplicated profile data pairs. This facilitates a more precise determination of their duplicate status.
+Using `DuplicateCheckeManual` in  `Duplicate_Checker.py` enables a manual check, providing a side-by-side comparison of metadata information between potential duplicate and unduplicated profile data pairs. This facilitates a more precise determination of duplicates.
 
 The manual check codes are storage in the <DC_OCEAN> main folder (`Duplicate_Checker.py`) at Line 79-131.
 
 ```python
 '''
-	This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
-	input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
+	This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicates, if so, output
+	the data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
 	output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 '''
 def duplicate_checke_manual(self, netCDF_filepath):
@@ -392,7 +392,7 @@ def duplicate_checke_manual(self, netCDF_filepath):
                     print('Duplicate result is: Not Duplicate')
 ```
 
-> Please update the ***netCDF_filepath*** to suit your specific case. We've provided a demo using WOD18 data for all of 1995 in netCDF format. You can download the compressed file [here](www.ocean.iap.ac.cn/) and then extract it to your local directory.
+> Please specify the ***netCDF_filepath*** to suit your specific case. We've provided a demo using WOD18 data in 1995 with netCDF format. You can download the compressed file [here](www.ocean.iap.ac.cn/) and then extract it to your local directory.
 
 
 
@@ -467,7 +467,7 @@ def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
             ### Compare the data
             isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
 
-            ### Output nonduplicated profile pair information
+            ### Output non-duplicate profile pair information
             if (isDuplicated == False):
                 self.output_UnduplicateList_txt(fid_unduplicate_list,content1,content2,file1,file2)
 
@@ -548,7 +548,7 @@ The above data files can be viewed and modified using Excel.
 
 Here, we will use some *in-situ* observational profiles in 1995 downloaded from the World Ocean Database (WOD18) to run the DC_OCEAN, aiming to detect the potential duplicate profiles within this dataset. These netCDF files are stored in `<DC_ocean>/Input_files/WOD18_sample_1995`
 
-**We here highly recommend you to read the following instructions before you run the demo**:
+**Please read the following instructions before you run the demo**:
 
 Ensure all necessary dependencies are installed. You can run the MAIN files `M00_Duplicate_Check_MAIN.py` using the following command:
 
@@ -573,11 +573,11 @@ python M00_Duplicate_Check_MAIN.py
 Update Profile Summary Score list or not(1: Yes (default); 0: No): 1
 ```
 
-Then, it will automatically running all supporting files (`N00_Create_Profile_Summary_Score.py` and `N01_Possible_Duplicate_Check.py`). The output files are the duplicate and non-duplicate list (test files) saved in the default output directory.
+Then, it will automatically running all supporting files (`N00_Create_Profile_Summary_Score.py` and `N01_Possible_Duplicate_Check.py`). The output files are the duplicate and non-duplicate lists (test files) saved in the default output directory.
 
 
 
-**Example #2:** To specify custom mode parameters with default input and output path:
+**Example #2:** To customize mode parameters with different input and output path:
 
 ```shell
 python M00_Duplicate_Check_MAIN.py -m 0
@@ -589,7 +589,7 @@ or perform manual duplicate check :
 python M00_Duplicate_Check_MAIN.py -m 1
 ```
 
-within this mode, you will be required to input the filenames of duplicate:
+within this mode, you will be required to input the file names:
 
 ```
 ---------Please input two netCDF files which are potential duplicates--------
@@ -603,11 +603,11 @@ choose whether you want to output the comparasion information (1-yes; 0: no):
 Output profile information or not(1: Yes; 0: No):  1
 ```
 
-Then, it will return the result similar as Section 3.
+Then, it will output the results similar as Section 3.
 
 
 
-**Example #3:** To specify custom all parameters:
+**Example #3:** One can customize parameters as needed:
 
 ```
 python M00_Duplicate_Check_MAIN.py -i /path/to/input -o /path/to/output -m 0
@@ -620,9 +620,9 @@ In this example, the input directory and output directory **are entered via argu
 
 ## 6. Notes for WOD18 netCDF format
 
-In this algorithm, the input data and the data format **is followed** WOD18 (World Ocean Database 2018) single netCDF file format. The format can be referenced [here](https://www.ncei.noaa.gov/access/world-ocean-database/wod-codes.html#second). The variables we used are shown in Table 3. 
+In this algorithm, the input data and the data format **is** WOD18 (World Ocean Database 2018) single netCDF file format. The format can be referenced [here](https://www.ncei.noaa.gov/access/world-ocean-database/wod-codes.html#second). The variables we used are shown in Table 3. 
 
-Here, we also provide a *.cdl file [here](https://github.com/IQuOD/duplicated_checking_IQuOD/blob/main/ocean_data_netCDF_format.cdl) for user to build an input file. <u>**Therefore, if you need to use your custom format rather than using WOD18 format, please follow the *cdl file to customize your input netCDF files, otherwise the program will report many errors.**</u>
+Here, we also provide a *.cdl file [here](https://github.com/IQuOD/duplicated_checking_IQuOD/blob/main/ocean_data_netCDF_format.cdl) for user to build an input file. <u>**Therefore, if you need to use your custom format rather than using WOD18 format, please follow the *cdl file to customize your input netCDF files, otherwise the program will report errors.**</u>
 
 > Note: If a specific data field does not have information (i.e., the data on your side doesn't contain the information/value of this specific data field), please set it to its default value.
 
@@ -823,9 +823,9 @@ This study is supported by the Strategic Priority Research Program of the Chines
 
 ## 11. Questions and feedback
 
-We warmly welcome feedback, questions, forks, pull requests, and improvements for the DC_OCEAN project within the IQuOD community!!
+We warmly welcome feedback, questions,  requests for the DC_OCEAN !!
 
-If you have any questions, suggestions, or come across any bugs in the program, or if you're interested in debugging or enhancing the DC_OCEAN project, please don't hesitate to get in touch:
+If you have any questions, suggestions,  find any bugs, or you're interested in further developing the DC_OCEAN software, please contact us:
 
 * [Create an issue](https://github.com/IQuOD/duplicated_checking_IQuOD/issues) in the GitHub community
 * [Pull requests](https://github.com/IQuOD/duplicated_checking_IQuOD/pulls) your debugged/improved codes in the GitHub community.
