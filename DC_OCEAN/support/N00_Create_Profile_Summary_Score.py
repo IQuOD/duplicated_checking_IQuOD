@@ -14,10 +14,12 @@
 
 """
 This script used for pre-processing profile data (only supports WOD18 netCDF format files).
+This script aims at reading the metadata and secondary information from the original netCDF files (we use the WOD18 single netCDF format) and then processing the metadata to create a data-metadata full list
+
 During the process:
 --Numerical metadata are retained.
 --String metadata are converted into numerical values by using the ASCII code to convert each letter (including spaces) and then add the ASCII code of each letter to obtain final values.
-The results are stored in npz format file.
+The results are stored in *.npz format file.
 
 ***For data that is not in WOD18 netCDF format, it needs to be rewritten as WOD18 format firstly.
 The variables included in the WOD18 netCDF files can be checked in Table 3 in the README.md
@@ -34,6 +36,8 @@ The order in 'meta_names' CANNOT be modifed. Please strictly following this orde
 Read the Section 5 of README file to customize your own netCDf file (if necessary).
 
 PSS = Profile Summary Score (See Song et al., 2024;Frontier in Mairne Science)
+
+The calculation of the PSS will be done in the N01_Possible_Duplicate_Check.py
 
 Usage:
     Run this script and follow the prompt to enter the directory path containing netCDF files.

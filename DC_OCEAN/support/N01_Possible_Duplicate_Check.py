@@ -13,13 +13,20 @@
 ######################################################################
 
 """
-This script is to run the crude screening check.
-We set up 14 criteria (14 checks) to identify the maximum number of possible duplicates (see Figure 1 of Song et al., 2024).
+This script aims at utilizing 14 distinct screening criteria to calculate the Profile Summary Score (PSS) and identify potential duplicate pairs. 
+
+The input is a data-metadata full list created by N00_Create_Profile_Summary_Score.py
+
+The output is a potential duplicate pair list file (*.txt).
+
+This script is to run the crude screening check
+
+We set up 14 criteria (14 checks) to identify the maximum number of potential duplicates (see Figure 1 of Song et al., 2024).
 
 Usage:
     Run this script and follow the prompt to enter the directory path containing netCDF files.
     
-PSS = profile summary score (see Song et al., 2024;Frontier in Marine Science)
+PSS = profile summary score (see Song et al., 2024; Frontier in Marine Science)
 
 """
 
@@ -1358,34 +1365,34 @@ def main(PSS_summary_filename):
     print('Running the Crude Screen check: the No.14 criteria check...')
     duplicate_filename_list_14=N02_14_PSS_check_PCA_95_allinfo(PSS_series,filename_info)
 
-    #combine all possible duplicate list from No.1 checks to No.14 checks
-    All_possible_duplicate_list=duplicate_filename_list_1+duplicate_filename_list_2+duplicate_filename_list_3+duplicate_filename_list_4+duplicate_filename_list_5+duplicate_filename_list_6+duplicate_filename_list_7+duplicate_filename_list_8+duplicate_filename_list_9+duplicate_filename_list_10+duplicate_filename_list_11+duplicate_filename_list_12+duplicate_filename_list_13+duplicate_filename_list_14
+    #combine all potential duplicate list from No.1 checks to No.14 checks
+    All_potential_duplicate_list=duplicate_filename_list_1+duplicate_filename_list_2+duplicate_filename_list_3+duplicate_filename_list_4+duplicate_filename_list_5+duplicate_filename_list_6+duplicate_filename_list_7+duplicate_filename_list_8+duplicate_filename_list_9+duplicate_filename_list_10+duplicate_filename_list_11+duplicate_filename_list_12+duplicate_filename_list_13+duplicate_filename_list_14
 
     # 'unique' the pair
-    All_possible_duplicate_list = math_util_functions.process_file_pairs_generic(All_possible_duplicate_list)
+    All_potential_duplicate_list = math_util_functions.process_file_pairs_generic(All_potential_duplicate_list)
 
     print('The number of the possible duplicates pairs are:')
-    for i in All_possible_duplicate_list:
+    for i in All_potential_duplicate_list:
         print(i)
 
-    print('The number of the possible duplicates pairs are: '+str(len(All_possible_duplicate_list)))
+    print('The number of the possible duplicates pairs are: '+str(len(All_potential_duplicate_list)))
 
-    return All_possible_duplicate_list
+    return All_potential_duplicate_list
 
 # Storing potential duplicates
-def save_txt_duplicate_list(All_possible_duplicate_list,PSS_summary_filename):
-    ### write the possible_duplicate_list to text file
+def save_txt_duplicate_list(All_potential_duplicate_list,PSS_summary_filename):
+    ### write the potential_duplicate_list to text file
     [script_directory,_]=os.path.split(PSS_summary_filename)
     if not os.path.exists(script_directory):
         os.makedirs(script_directory)
 
     output_file=os.path.join(script_directory,'sorted_unique_pairs_generic.txt')
     with open(output_file, 'w') as file:
-        for pair in All_possible_duplicate_list:
+        for pair in All_potential_duplicate_list:
             file.write(f"{pair[0]} {pair[1]}\n")
 
     #output
-    print('The possible duplicates pair list is stored in: '+output_file)
+    print('The potential duplicates pair list is stored in: '+output_file)
     print('Then, please run the M01/M02 files to determine whether the potential duplicate pairs are exact/possible/no duplicates or not')
 
 
@@ -1394,14 +1401,14 @@ if __name__ == '__main__':
     # filepath = '../Input_files/PSS_summary.npz'
     PSS_summary_filename = os.path.dirname(os.path.abspath(__file__)) + "/../Input_files/"
 
-    parser = argparse.ArgumentParser(description='Possible Duplicate Check')
+    parser = argparse.ArgumentParser(description='Potential Duplicate Check')
     parser.add_argument("-d", "--PSSfolder", type=str, default=PSS_summary_filename)
     args = parser.parse_args()
     PSS_summary_filename = args.PSSfolder
     
     if validate_file(PSS_summary_filename):
-        All_possible_duplicate_list = main(PSS_summary_filename)
-        save_txt_duplicate_list(All_possible_duplicate_list, PSS_summary_filename)
+        All_potential_duplicate_list = main(PSS_summary_filename)
+        save_txt_duplicate_list(All_potential_duplicate_list, PSS_summary_filename)
         print('SUCCESSFULLY run the crude screen check!!')
     else:
         print("The entered path is not valid. Please enter the path to your Profile Summary Score file (*.npz).")
