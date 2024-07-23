@@ -31,7 +31,7 @@ from scipy.stats import zscore
 try:
     import math_util_functions
 except:
-    from util import math_util_functions as math_util_functions
+    from DC_OCEAN.util import math_util_functions as math_util_functions
 import argparse
 
 # Used to determine whether the input path is correct
