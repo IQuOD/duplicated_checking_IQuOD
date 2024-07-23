@@ -6,19 +6,37 @@ Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Rebe
 
 International Quality-controlled Ocean Database (*IQuOD*)
 
+
+
+*Author affiliations:*
+
 Institute of Atmospheric Physics, Chinese Academy of Sciences (IAP/CAS)
+
+Climate Science Centre, Environment, Commonwealth Scientific and Industrial Research Organisation (CSIRO), Australia.
+
+Computer Network Information Center (CNIC), Chinese Academy of Sciences
+
+Scripps Institution of Oceanography (SIO), University of California, United States.
+
+Istituto Nazionale di Geofisica e Vulcanologia (INGV), Italy.
+
+Department of Geophysics, Tohoku University, Japan.
+
+NOAA National Centers for Environmental Information, United States.
+
+
 
 ## 1. Overview
 
 **This algorithm, namely  DC_OCEAN, aims at detecting the ocean *in-situ* duplicate profiles by reducing the computational intensity in a cost-effective way.**
 
-It utilizes a 'DNA' method, which assigns a 'DNA' to each profile using primary metadata (e.g., latitude, longitude, instrument types) and secondary data (e.g., sum of depth, sum of temperature, standard deviation of temperature in the profile). This approach is inspired by the similarity between profile data characteristics and the structure of DNA in biology, where each profile represents a 'DNA' and different metadata information corresponds to distinct segments on this 'DNA.' 
+It utilizes a 'profile summary score (PSS)' method, which assigns a numerical value to each profile using primary metadata (e.g., latitude, longitude, instrument types) and secondary data (e.g., sum of depth, sum of temperature, standard deviation of temperature in the profile). 
 
 The core assumption of this algorithm is that if it's a duplicate pair, most of the metadata and observational data will be identical.
 
 The duplicate checking algorithm can support various groups including IQuoD, IAP/CAS, WOD/NCEI, CODC etc.
 
-The codes need to be run with MATLAB and Python 3.
+The codes need to be run with Python 3.
 
 **A scientific paper introducing this algorithm could be found in Song et al., 2024.**
 
@@ -32,13 +50,13 @@ DC_OCEAN is an open-source Python library designed for detecting duplicate profi
 
 * The performance and robustness of **DC_OCEAN** have been thoroughly analyzed and evaluated in a scientific peer-reviewed journal (refer to Song et al., 2024; FMS).
 * This software also partly contributes to the International Quality-controlled Ocean Database (IQuOD ) Task Team, specifically the Duplicate Checking Task Team, the **DC_OCEAN** has been adopted and recommended by IQuOD.
-* **DC_OCEAN** utilizes 'DNA' algorithms, which employ mathematical, statistical methods like the entropy weight method and principal component analysis to establish a unique 'DNA' for each profile. This approach offers greater flexibility in comparisons and significantly reduces the time complexity of the screening process, all while ensuring screening accuracy.
+* **DC_OCEAN** calculates the Profile Summary Score (PSS), which employ mathematical, statistical methods like the entropy weight method and principal component analysis (PCA) to establish a unique numerical value for each profile. This approach offers greater flexibility in comparisons and significantly reduces the time complexity of the screening process, all while ensuring screening accuracy.
 
 #### 2.1 Composition for DC_OECAN
 
 **The DC_OCEAN is composed of two main components:**
 
-* **The first component** involves the processing of metadata by calculating their corresponding 'DNA' for each profile. These files are stored in the 'support' folder.
+* **The first component** involves the processing of metadata by calculating their corresponding PSS for each profile. These files are stored in the 'support' folder.
 
 * **The second component** is the core program of DC_OCEAN, designed to determine whether potential duplicate pairs are real duplicates or not.
 
@@ -48,11 +66,11 @@ DC_OCEAN is an open-source Python library designed for detecting duplicate profi
 
 (1) N00_Create_Profile_Summary_Score.py
 
-This script aims at reading the metadata and secondary information from the original netCDF files (we use the WOD18 single netCDF format) and then processing the metadata to create a Profile Summary Score (PSS) list.
+This script aims at reading the metadata and secondary information from the original netCDF files (we use the WOD18 single netCDF format) and then processing the metadata to create a data-metadata full list for later estimating the Profile Summary Score (PSS).
 
 (2) N01_Possible_Duplicate_Check.py
 
-This script aims at utilizing 14 distinct screening criteria to calculate the Profile Summary Score (PSS) and identify possible duplicate pairs. The output is a possible duplicate pair list file (*.txt).
+This script aims at utilizing 14 distinct screening criteria to calculate the Profile Summary Score (PSS) and identify potential duplicate pairs. The output is a potential duplicate pair list file (*.txt).
 
 
 
@@ -219,7 +237,7 @@ Now, you can get started with DC_OCEAN!
 
 ##4. Logical flow of DC_OCEAN
 
-#### 4.1  support files to calculate the Profile Summary Score and possible duplicates list 
+#### 4.1  support files to calculate the Profile Summary Score and potential duplicates list 
 
 In this step, we will pre-processes the profiles and metadata, using ASCII to convert character (string) variables into numerical values. This process generates the `../Input_files/Profile_Summary_Score_list.npz` file. You'll find three variables in this npz file: `PSS_series`, `filename_info`, and `variable_name`.
 
@@ -232,7 +250,7 @@ The acceptable input parameters are as follows:
 
 ```
 -i or --input: the path that storge all netCDF file. The default value is <DC_ocean>/Input_files/WOD18_sample_1995
--o or --output: the path that storge DNA_Summary.npz. The default value is <DC_ocean>/Input_files
+-o or --output: the path that storge Profile_Summary_Score_list.npz. The default value is <DC_ocean>/Input_files
 ```
 
 Here, we try the following command:
@@ -266,10 +284,10 @@ Profile_Summary_Score_list.npz Complete !
 
 If a file with the same name already exists in the output path, the following question will go out, please give an answer.
 ```
-Update DNA Summary or not(1: Yes (default); 0: No): 
+Update Profile Summary Score list or not(1: Yes (default); 0: No): 
 ```
 
-Next, use the `Profile_Summary_Score_list.npz` file as input for the sequential execution of `support/N01_Possible_Duplicate_Check.py`. These scripts apply various strategies algorithms (with 14 strategies in total) to uncover as many potential duplicates as possible. This process generates the possible duplicate pairs list:
+Next, use the `Profile_Summary_Score_list.npz` file as input for the sequential execution of `support/N01_Possible_Duplicate_Check.py`. These scripts apply various strategies algorithms (with 14 strategies in total) to uncover as many potential duplicates as possible. This process generates the potential duplicate pairs list:
 
 ```shell
 cd <DC_ocean>/support
@@ -294,7 +312,7 @@ Running the Crude Screen check: the No.11 criteria check...
 Running the Crude Screen check: the No.12 criteria check...
 Running the Crude Screen check: the No.13 criteria check...
 Running the Crude Screen check: the No.14 criteria check...
-The number of the possible duplicates pairs are:
+The number of the potential duplicates pairs are:
 ('wod_007276168O.nc', 'wod_007276473O.nc')
 ...
 ...
@@ -823,9 +841,9 @@ This study is supported by the Strategic Priority Research Program of the Chines
 
 ## 11. Questions and feedback
 
-We warmly welcome feedback, questions,  requests for the DC_OCEAN !!
+We warmly welcome feedback, questions, requests for the DC_OCEAN !!
 
-If you have any questions, suggestions,  find any bugs, or you're interested in further developing the DC_OCEAN software, please contact us:
+If you have any questions, suggestions, find any bugs, or you're interested in further developing the DC_OCEAN software, please contact us:
 
 * [Create an issue](https://github.com/IQuOD/duplicated_checking_IQuOD/issues) in the GitHub community
 * [Pull requests](https://github.com/IQuOD/duplicated_checking_IQuOD/pulls) your debugged/improved codes in the GitHub community.
