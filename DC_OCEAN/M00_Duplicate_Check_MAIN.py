@@ -3,14 +3,13 @@
 ########################################################################
 ### @copyright Copyright (C) 2024 All Rights Reserved.
 ### @file  M00_Duplicate_Check_MAIN.py
-### @brief Instantiate an object of the Duplicate_Checker class in M00_Duplicate_Checkke_MAIN.py. 
-###        Pass in the parameters required for the Check process, and the object will execute the specific Check process.
+### @brief 
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.1			|	Create
-### 2024-06-01	|                   |	1.2			|	Modify
-### 2024-07-04	|                   |	1.3			|	Modify
+### 2024-06-01	|                   |	1.2			|	Create
+### 2024-07-04	|                   |	1.3			|	Create
 ######################################################################
 
 """
@@ -21,11 +20,11 @@
     mode = 1:  DuplicateCheckeManual
     Manually check whether the potential duplicates are exact duplicates based on some criterias
     This function is manually ehck one by one pair
-    input data: Filenames of the possible duplicates
+    input data: Filenames of the potential duplicates
     output: whether it is exact duplicated, possible duplicate or non-duplicates. (Screen output)
     
     mode = 0:  DuplicateCheckeList
-    Similar with mode = 1, but check automatically with the possible duplicate list.
+    Similar with mode = 1, but check automatically with the potential duplicate list.
     input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
     output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 """
@@ -43,12 +42,14 @@ import warnings
 warnings.filterwarnings('ignore')
 warnings
 
+# Manually check whether the potential duplicates are exact duplicates based on some criterias one by one pair.
 def DuplicateCheckeManual(checker, InputDir, OutputDir):
     if checker.validate_file(InputDir):
         checker.duplicate_checke_manual(InputDir)
     else:
         print("The entered path of netCDF files is not valid. Please ensure the path is correct and try again.")
 
+# Automatically check whether the potential duplicates list are exact duplicates based on some criterias.
 def DuplicateCheckeList(checker, InputDir, OutputDir):
     # input the path with filename (*.txt) of the potential duplicated list output from N01_possible_duplicates.py
     potential_txt_path = OutputDir + "/sorted_unique_pairs_generic.txt"

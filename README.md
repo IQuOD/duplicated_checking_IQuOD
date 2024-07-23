@@ -34,7 +34,7 @@ It utilizes a 'profile summary score (PSS)' method, which assigns a numerical va
 
 The core assumption of this algorithm is that if it's a duplicate pair, most of the metadata and observational data will be identical.
 
-The duplicate checking algorithm can support various groups including IQuoD, IAP/CAS, WOD/NCEI, CODC etc.
+The duplicate checking algorithm can support various groups including IQuOD, IAP/CAS, WOD/NCEI, CODC etc.
 
 The codes need to be run with Python 3.
 
@@ -230,12 +230,12 @@ CTD double data check: 0
    150.000    150.000      0.000     2.5000     2.5000     0.0000     0.0000
    200.000    200.000      0.000     1.3200     1.3200     0.0000     0.0000
    300.000    300.000      0.000     0.6600     0.6600     0.0000     0.0000
-Duplicate result is: Near Duplicate
+Duplicate result is: Possible Duplicate
 ```
 
 Now, you can get started with DC_OCEAN!
 
-##4. Logical flow of DC_OCEAN
+## 4. Logical flow of DC_OCEAN
 
 #### 4.1  support files to calculate the Profile Summary Score and potential duplicates list 
 
@@ -313,12 +313,12 @@ Running the Crude Screen check: the No.12 criteria check...
 Running the Crude Screen check: the No.13 criteria check...
 Running the Crude Screen check: the No.14 criteria check...
 The number of the potential duplicates pairs are:
-('wod_007276168O.nc', 'wod_007276473O.nc')
+('wod_007274744O.nc', 'wod_007275024O.nc')
 ...
 ...
+('wod_007274958O.nc', 'wod_007275196O.nc')
 ('wod_007275019O.nc', 'wod_007275021O.nc')
-('wod_007275041O.nc', 'wod_007276232O.nc')
-The number of the possible duplicates pairs are: 258
+The number of the possible duplicates pairs are: 88
 
 *************FINISHED****************
 The possible duplicates list is stored in: <DC_OCEAN>\Input_files\sorted_unique_pairs_generic.txt
@@ -356,65 +356,29 @@ This program aims to use the knowledge of physical oceanography and the expert e
 
 ##### 4.2.1 Manual check: `DuplicateCheckeManual`
 
-Using `DuplicateCheckeManual` in  `Duplicate_Checker.py` enables a manual check, providing a side-by-side comparison of metadata information between potential duplicate and unduplicated profile data pairs. This facilitates a more precise determination of duplicates.
+Using `DuplicateCheckeManual` in  `M00_Duplicate_Check_MAIN.py` enables a manual check, providing a side-by-side comparison of metadata information between potential duplicate and unduplicated profile data pairs. This facilitates a more precise determination of duplicates.
 
-The manual check codes are storage in the <DC_OCEAN> main folder (`Duplicate_Checker.py`) at Line 79-131.
+The manual check codes are storage in the <DC_OCEAN> main folder (`M00_Duplicate_Check_MAIN.py`) at Line 46-50.
 
 ```python
 '''
-	This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicates, if so, output
-	the data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
-	output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
+	This program is used to manually check whether the potential duplicates are exact duplicates based on some criterias
+    This function is manually ehck one by one pair
+    input data: Filenames of the potential duplicates
+    output: whether it is exact duplicated, possible duplicate or non-duplicates. (Screen output)
 '''
-def duplicate_checke_manual(self, netCDF_filepath):
-    while True:
-        print('---------Please input two netCDF files which are potential duplicates--------')
-        file1=input('The first netCDF file name is: ').rstrip().lstrip()
-        file2=input('The second netCDF file name is: ').rstrip().lstrip()
-        isOutput_detail = input("Output profile information or not(1: Yes; 0: No)")
-
-        # index_str=file1.rfind('_')
-        # date1=file1[index_str-14:index_str-6]
-        # year1=date1[0:4]
-        # month1=date1[4:6]
-        # path1=os.path.join(netCDF_filepath,year1,month1)
-
-        # index_str=file2.rfind('_')
-        # date2=file2[index_str-14:index_str-6]
-        # year2=date2[0:4]
-        # month2=date2[4:6]
-        # path2=os.path.join(netCDF_filepath,year2,month2)
-
-        filepath1=os.path.join(netCDF_filepath,file1)
-        filepath2=os.path.join(netCDF_filepath,file2)
-
-        ### Read the first netCDF file data
-        content1=self.read_nc_data(filepath1)   # content1 is a dictionary
-        ### Read the second netCDF file data
-        content2=self.read_nc_data(filepath2)
-
-        ### Output the information of two netCDF files
-        self.output_info_pairs(content1,content2)
-
-        ### Determine whether it is really repeated
-        isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
-
-        if(isOutput_detail=='1'):
-            self.output_detail(content1,content2)
-
-            if(isDuplicated==1):
-                print('Duplicate result is: Exact Duplicate')
-                elif(isDuplicated==2):
-                    print('Duplicate result is: Possible Duplicate')
-                else:
-                    print('Duplicate result is: Not Duplicate')
+def DuplicateCheckeManual(checker, InputDir, OutputDir):
+    if checker.validate_file(InputDir):
+        checker.duplicate_checke_manual(InputDir)
+    else:
+        print("The entered path of netCDF files is not valid. Please ensure the path is correct and try again.")
 ```
 
 > Please specify the ***netCDF_filepath*** to suit your specific case. We've provided a demo using WOD18 data in 1995 with netCDF format. You can download the compressed file [here](www.ocean.iap.ac.cn/) and then extract it to your local directory.
 
 
 
-##### 4.2.2 Atuomatically check (DuplicateCheckeList)
+##### 4.2.2 Automatically check: `DuplicateCheckeList` 
 
 The logical flow is consistent with Section 4.2.1, with the only difference being the modification of input and output formats.
 
@@ -422,111 +386,33 @@ It should be noted that **the input of this code is sourced from the output in 4
 
 ```python
 """
-    This program is used to determine whether the potential duplicate pairs quickly identified in the N01 step are actually duplicated, and if so, output
+    This program is used to determine whether the potential duplicates are actually duplicates automatically with the potential duplicate list.
     input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
     output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 """
-def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
-
-    ### Read potential_files_txt
-    potential_files_list=self.read_potential_txt(potential_txt_path)
-
-
-    # script_directory = os.path.dirname(potential_txt_path)
-    script_directory, _filename = os.path.split(potential_txt_path)
-
-    potential_output_path=os.path.join(script_directory,'DuplicateList_'+_filename)
-
-    duplicate_number=0
-    fid_duplicate_list=open(potential_output_path,'w+')
-    print('filename1, filename2, unique_id_cast1, unique_id_cast2, same_moment_diff_loc_cruise, diff_records_in_same_Moment&Loc_cruise, scaled_records, rounded_truncate, wrong_location, wrong_date, wrong_moments, wrong_country, wrong_instru_types, identical_info, interpolated_pairs, CTD multiple observations, ',end='',file=fid_duplicate_list)
-    print('Instrument_cast1, Instrument_cast2, Accession_cast1, Accession_cast2, lat_cast1, lat_cast2, lon_cast1, lon_cast2, year_cast1, year_cast2, month_cast1, month_cast2, day_cast1, day_cast2, hour_cast1, hour_cast2, minute_cast1, minute_cast2,',end='',file=fid_duplicate_list)
-    print('probe_type_cast1, probe_type_cast2, recorder_cast1, recorder_cast2, depth_number_cast1, depth_number_cast2, maximum_depth_cast1, maximum_depth_cast2, country_cast1, country_cast2, GMT_time_cast1, GMT_time_cast2, dbase_orig_cast1, dbase_orig_cast2,',end='',file=fid_duplicate_list)
-    print('project_cast1, project_cast2, Platform_cast1, Platform_cast2, ocean_vehicle_cast1, ocean_vehicle_cast2, WOD_cruise_identifier1,WOD_cruise_identifier2,Institute1,Institute2,need_z_fix1,need_z_fix2,sum_depth_cast1, sum_depth_cast2, sum_temp_cast1, sum_temp_cast2, sum_salinity_cast1, sum_salinity_cast2',file=fid_duplicate_list)
-
-    ### Output a txt file containing nonduplicated profiles
-    potential_output_unduplicate_path = os.path.join(script_directory,'Unduplicatelist_' + _filename)
-    fid_unduplicate_list = open(potential_output_unduplicate_path, 'w+')
-
-    for i,potential_pairs in enumerate(potential_files_list):
-        file1=potential_pairs[0].rstrip().lstrip()
-        for i in range(1,len(potential_pairs)):
-            file2=potential_pairs[i].rstrip().lstrip()
-            # isOutput_detail = input("Output profile information or not(1: Yes; 0: No)")
-            isOutput_detail='0'
-            
-            # index_str=file1.rfind('_')
-            # date1=file1[index_str-14:index_str-6]
-            # year1=date1[0:4]
-            # month1=date1[4:6]
-            # day1=date1[6:8]
-            # path1=os.path.join(netCDF_filepath,year1,month1)
-
-            # index_str=file2.rfind('_')
-            # date2=file2[index_str-14:index_str-6]
-            # year2=date2[0:4]
-            # month2=date2[4:6]
-            # day2=date2[6:8]
-            # path2=os.path.join(netCDF_filepath,year2,month2)
-            
-            filepath1=os.path.join(netCDF_filepath,file1)
-            filepath2=os.path.join(netCDF_filepath,file2)
-            #print(filepath1)
-
-            ### Read the first netCDF file data
-            try:
-                content1=self.read_nc_data(filepath1)   # content1 is a dictionary
-                ### Read the second netCDF file data
-                content2=self.read_nc_data(filepath2)
-            except:
-                print('Failed reading: '+file1+' and '+file2)
-                continue
-
-            ### Compare the data
-            isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
-
-            ### Output non-duplicate profile pair information
-            if (isDuplicated == False):
-                self.output_UnduplicateList_txt(fid_unduplicate_list,content1,content2,file1,file2)
-
-            elif(isDuplicated==1 or isDuplicated==2):
-                ### Output pair information
-
-                print(file1,file2)
-
-                duplicate_number=duplicate_number+1
-
-                ### Output metadata information and duplicate type of duplicate profile pairs
-                self.output_DuplicateList_txt(fid_duplicate_list,content1,content2,duplicate_multimodels,file1,file2)
-
-                if(isOutput_detail=='1'):
-                    self.output_detail(content1,content2)
-
-                if(isDuplicated==1):
-                    print(file1+' v.s. '+file2+': Exact Duplicate')
-                elif(isDuplicated==2):
-                    print(file1+' v.s. '+file2+': Possible Duplicate')
-                else:
-                    print(file1+' v.s. '+file2+': No Duplicate')
-
-            del isDuplicated
-    print('\n\n')
-    print('***************FINISHED********************')
-    print("duplicate_number: " + str(duplicate_number))
-    print('\n')
-    print("Two files output: "+potential_output_unduplicate_path +' and '+potential_output_path)
-    print("Finished!")
+def DuplicateCheckeList(checker, InputDir, OutputDir):
+    # input the path with filename (*.txt) of the potential duplicated list output from N01_possible_duplicates.py
+    potential_txt_path = OutputDir + "/sorted_unique_pairs_generic.txt"
+    if checker.validate_file(potential_txt_path):
+        netCDF_filepath = InputDir
+        if checker.validate_file(netCDF_filepath):
+            checker.duplicate_checke_multiple(netCDF_filepath, potential_txt_path)
+        else:
+            print('The entered path of netCDF files is not valid. Please try again.')
+    else:
+        print("The entered path of potential duplicated list is not valid. Please ensure the path is correct and try again.")
 ```
 
 Subsequently, two text files are generated:
 
-* `duplicatelist_sorted_unique_pairs_generic.txt`：Contains filenames of duplicate data and their corresponding metadata.
+* `DuplicateList_sorted_unique_pairs_generic.txt`：Contains filenames of duplicate data and their corresponding metadata.
 
 * `Unduplicatelist_sorted_unique_pairs_generic.txt`: Contains filenames of non-duplicate data and their corresponding metadata.
 
 Table 2 presents the variables saved in the `*.txt` files and their corresponding metadata.
 
-<center> Table 2. The output metadata list in M02_MAIN_check_nc_duplicate_list.py <center/>
+<center> Table 2. The output metadata list in M00_Duplicate_Check_MAIN.py <center/>
+
 
 |        **Variable**        | **Corresponding metadata fullname** |
 | :------------------------: | :---------------------------------: |
@@ -644,33 +530,34 @@ Here, we also provide a *.cdl file [here](https://github.com/IQuOD/duplicated_ch
 
 > Note: If a specific data field does not have information (i.e., the data on your side doesn't contain the information/value of this specific data field), please set it to its default value.
 
-<center>Table 3. The input WOD18 data format list for ./support/N00_read_data_metadata.py <center/>
+<center>Table 3. The input WOD18 data format list for ./support/N00_Create_Profile_Summary_Score.py <center/>
 
-|     Variable name      |                           Comment                            | Data type |
-| :--------------------: | :----------------------------------------------------------: | :-------: |
-|       Access_no        |  NODC accession number (used to find original data at NODC)  |    int    |
-|        country         |                           country                            |   char    |
-|        dataset         |                         WOD dataset                          |   char    |
-|          lat           |                           latitude                           |   float   |
-|          lon           |                          longitude                           |   float   |
-|        Project         |                         Project name                         |   char    |
-|      Temperature       |                         Temperature                          |   float   |
-|          time          |                             time                             |  double   |
-| WOD_cruise_identifier  | two byte country code + WOD cruise number (unique to country code) |   char    |
-|    wod_unique_cast     |                       wod unique cast                        |    int    |
-|           z            |                    depth below sea level                     |   float   |
-|        Salinity        |                           Salinity                           |   float   |
-|         Oxygen         |                            Oxygen                            |   float   |
-|      Chlorophyll       |                         Chlorophyll                          |   float   |
-| Temperature_Instrument |                 Device used for measurement                  |   char    |
-|       need_z_fix       |                instruction for fixing depths                 |   char    |
-|        Recorder        |              Device which recorded measurement               |   char    |
-|        GMT_time        |                           GMT time                           |   float   |
-|         WMO_ID         |                   WMO identification code                    |    int    |
-|       dbase_orig       |           Database from which data were extracted            |   char    |
-|        platform        |     Name of platform from which measurements were taken      |   char    |
-|     Ocean_Vehicle      |                        Ocean vehicle                         |   char    |
-|       Institute        |            name of institute which collected data            |   char    |
+
+|     Variable name      |                           Comment                            | Data type |    Range     |
+| :--------------------: | :----------------------------------------------------------: | :-------: | :----------: |
+|       Access_no        |  NODC accession number (used to find original data at NODC)  |    int    |      -       |
+|        country         |                           country                            |   char    |      -       |
+|        dataset         |                         WOD dataset                          |   char    |      -       |
+|          lat           |                           latitude                           |   float   |   -90°~90°   |
+|          lon           |                          longitude                           |   float   |  -180°~180°  |
+|        Project         |                         Project name                         |   char    |      -       |
+|      Temperature       |                         Temperature                          |   float   |  -2 ℃~40 ℃   |
+|          time          |                             time                             |  double   |      -       |
+| WOD_cruise_identifier  | two byte country code + WOD cruise number (unique to country code) |   char    |      -       |
+|    wod_unique_cast     |                       wod unique cast                        |    int    |      -       |
+|           z            |                    depth below sea level                     |   float   | 0 m~12000 m  |
+|        Salinity        |                           Salinity                           |   float   | 0 psu~50 psu |
+|         Oxygen         |                            Oxygen                            |   float   |      -       |
+|      Chlorophyll       |                         Chlorophyll                          |   float   |      -       |
+| Temperature_Instrument |                 Device used for measurement                  |   char    |      -       |
+|       need_z_fix       |                instruction for fixing depths                 |   char    |      -       |
+|        Recorder        |              Device which recorded measurement               |   char    |      -       |
+|        GMT_time        |                           GMT time                           |   float   |      -       |
+|         WMO_ID         |                   WMO identification code                    |    int    |      -       |
+|       dbase_orig       |           Database from which data were extracted            |   char    |      -       |
+|        platform        |     Name of platform from which measurements were taken      |   char    |      -       |
+|     Ocean_Vehicle      |                        Ocean vehicle                         |   char    |      -       |
+|       Institute        |            name of institute which collected data            |   char    |      -       |
 
 
 
