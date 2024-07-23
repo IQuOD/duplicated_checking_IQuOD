@@ -568,6 +568,7 @@ python M00_Duplicate_Check_MAIN.py [-i <input_directory>] [-o <output_directory>
 **Example #1:** To run the code with the default parameters:
 
 ```
+cd <DC_OCEAN>
 python M00_Duplicate_Check_MAIN.py
 Update Profile Summary Score list or not(1: Yes (default); 0: No): 1
 ```
@@ -592,8 +593,8 @@ within this mode, you will be required to input the filenames of duplicate:
 
 ```
 ---------Please input two netCDF files which are potential duplicates--------
-The first netCDF file name is:wod_007275538O.nc
-The second netCDF file name is: wod_007275540O.nc
+The first netCDF file name is:wod_007274512O.nc
+The second netCDF file name is: wod_007274809O.nc
 ```
 
 choose whether you want to output the comparasion information (1-yes; 0: no):
