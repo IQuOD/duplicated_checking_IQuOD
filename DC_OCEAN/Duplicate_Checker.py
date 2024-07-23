@@ -28,17 +28,19 @@ warnings
 class DuplicateChecker(object):
     def __init__(self):
         pass
-
+    
+    # Check if the path exists and is a directory
     def validate_path(self, input_path):
         # Normalize the path
         normalized_path = os.path.normpath(input_path)
 
-        # Check if the path exists and is a directory
+        
         if not os.path.exists(normalized_path) or not os.path.isdir(normalized_path):
             return False
 
         return True
-
+    
+    # Check if the file exists
     def validate_file(self, input_path):
         # Normalize the path
         normalized_path = os.path.normpath(input_path)
@@ -49,6 +51,7 @@ class DuplicateChecker(object):
 
         return True
 
+    # Initialization the coding environment
     def InitEnvironment(self, InputDir, OutputDir):
         # N00_Create_Profile_Summary_Score
         if not(self.validate_path(InputDir)) or not(self.validate_path(OutputDir)):
@@ -81,6 +84,7 @@ class DuplicateChecker(object):
         input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
         output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
     '''
+    # mode = 1:  DuplicateCheckeManual
     def duplicate_checke_manual(self, netCDF_filepath):
         while True:
             print('---------Please input two netCDF files which are potential duplicates--------')
@@ -129,6 +133,7 @@ class DuplicateChecker(object):
         input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
         output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
     """
+    # mode = 0:  DuplicateCheckeList
     def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
 
         ### Read potential_files_txt
@@ -249,7 +254,8 @@ class DuplicateChecker(object):
             print('%10s %10s %10s %10s %10s %10s %10s' %('depth1','depth2','depth_diff','temp1','temp2','temp_diff','sal_diff'))
             for i in range(content1['depth_number']):
                 print('%10.3f %10.3f %10.3f %10.4f %10.4f %10.4f %10.4f' %(depth1[i],depth2[i],depth_diff[i],temp1[i],temp2[i],temp_diff[i],sal_diff[i]))
-
+    
+    ## read metadata and secondary data from the original netCDF file (WOD18 format)
     def read_nc_data(self,file):
         with nc.Dataset(file,'r') as f:
             try:
@@ -265,7 +271,7 @@ class DuplicateChecker(object):
             try:
                 access_no=f.variables['Access_no'][:]
             except:
-                access_no=999
+                access_no=np.isnan #setting the missing value for string variables
 
             time=f.variables['time']
             dtime = nc.num2date(time[-1], time.units)
@@ -282,16 +288,16 @@ class DuplicateChecker(object):
             longitude=round(float(f.variables['lon'][:]),4)
 
             depth=f.variables['z'][:]
-            depth[np.logical_or(depth>12000, depth<-10)]=np.nan
+            depth[np.logical_or(depth>12000, depth<-10)]=np.nan  #setting the missing value
 
             depth_number=len(depth)
             maximum_depth=depth[-1]
             sum_depth=round(np.nansum(depth),4)
             std_depth=round(np.nanstd(depth),4)
             if(np.isnan(sum_depth)):
-                sum_depth=999
+                sum_depth=np.isnan #setting the missing value
             if(np.isnan(std_depth)):
-                std_depth=999
+                std_depth=np.isnan #setting the missing value
 
             try:
                 temp=f.variables['Temperature'][:]
@@ -304,17 +310,17 @@ class DuplicateChecker(object):
                 cor_temp_depth=np.corrcoef(temp2,depth2)[1,0]
                 cor_temp_depth=round(cor_temp_depth,5)
                 if(np.isnan(cor_temp_depth)):
-                    cor_temp_depth=999
+                    cor_temp_depth=np.isnan #setting the missing value
             except:
                 temp=np.full((depth_number,1),np.nan)
                 hasTemp=0
                 sum_temp=0
-                std_temp=999
-                cor_temp_depth=999
+                std_temp=np.isnan #setting the missing value
+                cor_temp_depth=np.isnan #setting the missing value
 
             try:
                 sal=f.variables['Salinity'][:]
-                sal[np.logical_or(sal>43, sal<0)]=np.nan
+                sal[np.logical_or(sal>43, sal<0)]=np.nan #setting the missing value
                 sal2=sal[~np.isnan(sal)]
                 depth2=depth[~np.isnan(sal)]
                 hasSalinity = 1
@@ -322,13 +328,13 @@ class DuplicateChecker(object):
                 std_salinity=round(np.nanstd(sal),4)
                 cor_sal_depth=round(np.corrcoef(sal2,depth2)[1,0],5)
                 if(np.isnan(cor_sal_depth)):
-                    cor_sal_depth=999
+                    cor_sal_depth=np.isnan #setting the missing value
             except:
                 sal=np.full((depth_number,1),np.nan)
                 sum_salinity=0
                 hasSalinity=0
-                std_salinity=999
-                cor_sal_depth=999
+                std_salinity=np.isnan #setting the missing value
+                cor_sal_depth=np.isnan #setting the missing value
 
             try:
                 oxy=f.variables['Oxygen']
@@ -353,50 +359,50 @@ class DuplicateChecker(object):
             try:
                 WMO_id=int(f.variables['WMO_ID'][:])
             except:
-                WMO_id=999
+                WMO_id=np.isnan #setting the missing value for string variables
 
             try:
                 dbase_orig = str(nc.chartostring(f.variables['dbase_orig'][:]))
             except:
-                dbase_orig=''
+                dbase_orig=''   #setting the missing value for string variables
             try:
                 project_name=str(nc.chartostring(f.variables['Project'][:]))
             except:
-                project_name=''
+                project_name='' #setting the missing value for string variables
             try:
                 Platform=str(nc.chartostring(f.variables['Platform'][:]))
             except:
-                Platform=''
+                Platform='' #setting the missing value for string variables
 
             try:
                 ocean_vehicle=str(nc.chartostring(f.variables['Ocean_Vehicle'][:]))
             except:
-                ocean_vehicle=''
+                ocean_vehicle='' #setting the missing value for string variables
 
             try:
                 Institute=str(nc.chartostring(f.variables['Institute'][:]))
             except:
-                Institute=''
+                Institute='' #setting the missing value for string variables
 
             try:
                 WOD_cruise_identifier=str(nc.chartostring(f.variables['WOD_cruise_identifier'][:]))
             except:
-                WOD_cruise_identifier=''
+                WOD_cruise_identifier='' #setting the missing value for string variables
 
             try:
                 need_z_fix=str(nc.chartostring(f.variables['need_z_fix'][:]))
             except:
-                need_z_fix=''
+                need_z_fix='' #setting the missing value for string variables
 
             try:
                 Wind_Direction=str(nc.chartostring(f.variables['Wind_Direction'][:]))
             except:
-                Wind_Direction=''
+                Wind_Direction='' #setting the missing value for string variables
 
             try:
                 Wind_Speed=f.variables['Wind_Speed'][:]
             except:
-                Wind_Speed=999
+                Wind_Speed=np.isnan
 
             try:
                 cast_direction = str(nc.chartostring(f.variables['Cast_Direction'][:]))
