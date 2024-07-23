@@ -3,13 +3,14 @@
 ########################################################################
 ### @copyright Copyright (C) 2024 All Rights Reserved.
 ### @file  M00_Duplicate_Check_MAIN.py
-### @brief 
+### @brief Instantiate an object of the Duplicate_Checker class in M00_Duplicate_Checkke_MAIN.py. 
+###        Pass in the parameters required for the Check process, and the object will execute the specific Check process.
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.1			|	Create
-### 2024-06-01	|                   |	1.2			|	Create
-### 2024-07-04	|                   |	1.3			|	Create
+### 2024-06-01	|                   |	1.2			|	Modify
+### 2024-07-04	|                   |	1.3			|	Modify
 ######################################################################
 
 """

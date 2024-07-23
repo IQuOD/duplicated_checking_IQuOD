@@ -3,13 +3,13 @@
 ########################################################################
 ### @copyright Copyright (C) 2024 All Rights Reserved.
 ### @file  Duplicate_Checker.py
-### @brief 
+### @brief Based on object-oriented programming principles, we encapsulate the specific steps of DuplicateCheck within the Duplicate_Checker class.
 ### @version
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.1			|	Create
-### 2024-06-01	|                   |	1.2			|	Create
-### 2024-07-04	|                   |	1.3			|	Create
+### 2024-06-01	|                   |	1.2			|	Modify
+### 2024-07-04	|                   |	1.3			|	Modify
 ######################################################################
 
 import os
@@ -310,13 +310,13 @@ class DuplicateChecker(object):
                 cor_temp_depth=np.corrcoef(temp2,depth2)[1,0]
                 cor_temp_depth=round(cor_temp_depth,5)
                 if(np.isnan(cor_temp_depth)):
-                    cor_temp_depth=999 #setting the missing value
+                    cor_temp_depth=np.isnan #setting the missing value
             except:
                 temp=np.full((depth_number,1),np.nan)
                 hasTemp=0
                 sum_temp=0
-                std_temp=999 #setting the missing value
-                cor_temp_depth=999 #setting the missing value
+                std_temp=np.isnan #setting the missing value
+                cor_temp_depth=np.isnan #setting the missing value
 
             try:
                 sal=f.variables['Salinity'][:]
@@ -328,13 +328,13 @@ class DuplicateChecker(object):
                 std_salinity=round(np.nanstd(sal),4)
                 cor_sal_depth=round(np.corrcoef(sal2,depth2)[1,0],5)
                 if(np.isnan(cor_sal_depth)):
-                    cor_sal_depth=999 #setting the missing value
+                    cor_sal_depth=np.isnan #setting the missing value
             except:
                 sal=np.full((depth_number,1),np.nan)
                 sum_salinity=0
                 hasSalinity=0
-                std_salinity=999 #setting the missing value
-                cor_sal_depth=999 #setting the missing value
+                std_salinity=np.isnan #setting the missing value
+                cor_sal_depth=np.isnan #setting the missing value
 
             try:
                 oxy=f.variables['Oxygen']
@@ -402,7 +402,7 @@ class DuplicateChecker(object):
             try:
                 Wind_Speed=f.variables['Wind_Speed'][:]
             except:
-                Wind_Speed=999
+                Wind_Speed=np.isnan
 
             try:
                 cast_direction = str(nc.chartostring(f.variables['Cast_Direction'][:]))
