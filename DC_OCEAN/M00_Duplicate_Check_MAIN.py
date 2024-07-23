@@ -15,14 +15,14 @@
 """
     mode = 1:  DuplicateCheckeManual
     Manually check whether the potential duplicates are exact duplicates based on some criterias
-    This function is manually ehck one by one pair
+    This function is to manually check the previously identified duplicate pairs
     input data: Filenames of the possible duplicates
     output: whether it is exact duplicated, possible duplicate or non-duplicates. (Screen output)
     
     mode = 0:  DuplicateCheckeList
-    Similar with mode = 1, but check automatically with the possible duplicate list.
+    Similar with mode = 1, but automatically check the possible duplicate list.
     input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
-    output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
+    output: two txt files: the duplicate list and the non-duplicate list. These two files can be open by using Excel etc.
 """
 
 
