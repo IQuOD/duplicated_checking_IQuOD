@@ -316,15 +316,20 @@ def compair(content1,content2):
         if(content1['depth_number'] < content2['depth_number']):
             # depth2 interpolates to the depth of depth1, temp2 compare with temp1 layer by layer
             temp2_interp=np.interp(depth1, depth2, temp2, left=np.nan, right=np.nan, period=None)
-            nt = np.sum(np.abs(temp2_interp-temp1)<0.01)
+            #nt = np.sum(np.abs(temp2_interp-temp1)<0.01)
+            # 2024.8.29
+            nt = np.sum(np.abs(temp2_interp - temp1) < 0.2)
             levels=content1['depth_number']
         else:
             # depth1 interpolates to the depth of depth2, temp1 compare with temp2 layer by layer
             temp1_interp=np.interp(depth2, depth1, temp1, left=np.nan, right=np.nan, period=None)
-            nt = np.sum(np.abs(temp1_interp-temp2)<0.01)
+            #nt = np.sum(np.abs(temp1_interp-temp2)<0.01)
+            # 2024.8.29
+            nt = np.sum(np.abs(temp1_interp - temp2) < 0.2)
             levels=content2['depth_number']
-        percent_t=np.float64(nt)/levels            
+        percent_t=np.float64(nt)/levels
         duplicate_check11_T=percent_t>0.85
+        # print(duplicate_check11_T)
 
         ### Salinity
         if(content1['hasSalinity'] and content2['hasSalinity']):
@@ -338,8 +343,9 @@ def compair(content1,content2):
                 salinity1_interp=np.interp(depth2, depth1, salinity1, left=np.nan, right=np.nan, period=None)
                 nt = np.sum(np.abs(salinity1_interp-salinity2)<0.001) # threshold value: 0.001
                 levels=content2['depth_number']
-            percent_s=np.float64(nt)/levels            
+            percent_s=np.float64(nt)/levels
             duplicate_check11_S=percent_s>0.85
+
 
         duplicate_check11=duplicate_check11_T or duplicate_check11_S
 
@@ -373,9 +379,11 @@ def compair(content1,content2):
 
     isDuplicate=duplicate_check1 or duplicate_check2 or duplicate_check3 or duplicate_check4 or duplicate_check5 or duplicate_check6 or duplicate_check7 or duplicate_check8 or duplicate_check9 or duplicate_check10 or duplicate_check11 or duplicate_check12
 
-    if(isDuplicate == False):  # nonduplicated
-        duplicate_multimodels=(duplicate_check1,duplicate_check2,duplicate_check3,duplicate_check4,duplicate_check5,duplicate_check6,duplicate_check7,duplicate_check8,duplicate_check9,duplicate_check10,duplicate_check11,duplicate_check12)
-        return isDuplicate,duplicate_multimodels
+    if (isDuplicate == False):  # nonduplicated
+        duplicate_multimodels = (
+        duplicate_check1, duplicate_check2, duplicate_check3, duplicate_check4, duplicate_check5, duplicate_check6,
+        duplicate_check7, duplicate_check8, duplicate_check9, duplicate_check10, duplicate_check11, duplicate_check12)
+        return isDuplicate, duplicate_multimodels
 
     if(1):    
         print('\n')
@@ -392,18 +400,20 @@ def compair(content1,content2):
         print("Interpolation (missing data) check: %d" % (duplicate_check11))
         print("CTD double data check: %d" % (duplicate_check12))
 
-    if(isDuplicate==True):  #exat duplicated or near duplicated
-        if(duplicate_check10==True):
-            exact_duplicated=True
-            isDuplicate=1  # exact duplicated
+    if (isDuplicate == True):  # exat duplicates or possible duplicates
+        if (duplicate_check10 == True):
+            exact_duplicated = True
+            isDuplicate = 1  # exact duplicates
         else:
-            near_duplicated=True
-            isDuplicate=2  # near duplicated
+            near_duplicated = True
+            isDuplicate = 2  # possible duplicates
 
-    duplicate_multimodels=[duplicate_check1,duplicate_check2,duplicate_check3,duplicate_check4,duplicate_check5,duplicate_check6,duplicate_check7,duplicate_check8,duplicate_check9,duplicate_check10,duplicate_check11,duplicate_check12]
+    duplicate_multimodels = [duplicate_check1, duplicate_check2, duplicate_check3, duplicate_check4, duplicate_check5,
+                             duplicate_check6, duplicate_check7, duplicate_check8, duplicate_check9, duplicate_check10,
+                             duplicate_check11, duplicate_check12]
 
-    return isDuplicate,duplicate_multimodels
-    
+    return isDuplicate, duplicate_multimodels
+
 
 def distance(lat1,lat2,lon1,lon2):
     r=6371 # earth radius
