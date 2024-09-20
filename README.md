@@ -859,4 +859,4 @@ If you have any questions, suggestions, find any bugs, or you're interested in f
 * March 2024: Issued DC_OCEAN Python package (v1.1) and linked the package to the Zenodo.
 * May 2024: Issued DC_OCEAN Python package (v1.2)
 * July 2024: Code encapsulation and framework enhancement, issue DC_OCEAN Python package (v1.3.1)
-* September 2024: Paper (Song et al., 2024) published in the Frontier in Marine Sciences; Issue the DC_OCEAN Python package (v.1.3.2)
+* September 2024: Paper (Song et al., 2024) published in the Frontier in Marine Sciences; Issue the DC_OCEAN Python package (v.1.3.3)
