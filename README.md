@@ -821,7 +821,7 @@ IQuOD project and Task Team Duplicates: https://www.iquod.org/about.html
 
 **For more information about the DC_OCEAN (performance evaluation, scientific application)**, please refer to:
 
-> X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, H. Yuan, G. Castelao, V. Gouretski, L. Cheng*, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science* (under review)
+> X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, G. Castelao, V. Gouretski, L. Cheng*, 2024: DC_OCEAN: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*. [https://doi.org/10.3389/fmars.2024.1403175](https://doi.org/10.3389/fmars.2024.1403175)
 
 ## 8. License
 
@@ -831,7 +831,7 @@ IQuOD project and Task Team Duplicates: https://www.iquod.org/about.html
 
 Please **REMEMBER** to cite this study if you use DC_OCEAN for any purposes:
 
-**[1]** X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, H. Yuan, G. Castelao, V. Gouretski, L. Cheng*, 2024: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*
+**[1]** X. Song, Z. Tan, R. Locarnini, S. Simoncelli, R. Cowley, S.i Kizu, T. Boyer, F. Reseghetti, H. Yuan, G. Castelao, V. Gouretski, L. Cheng*, 2024: DC_OCEAN: An open-source algorithm for identification of duplicates in ocean database. *Frontier in Marine Science*. [https://doi.org/10.3389/fmars.2024.1403175](https://doi.org/10.3389/fmars.2024.1403175)
 
 **[2]** Zhetao Tan, Xinyi Song, Huifeng Yuan, & Rebecca Cowley. (2024). IQuOD/duplicated_checking_IQuOD: v1.3.1 (v1.3.1). Zenodo. https://doi.org/10.5281/zenodo.12697240
 
@@ -859,3 +859,4 @@ If you have any questions, suggestions, find any bugs, or you're interested in f
 * March 2024: Issued DC_OCEAN Python package (v1.1) and linked the package to the Zenodo.
 * May 2024: Issued DC_OCEAN Python package (v1.2)
 * July 2024: Code encapsulation and framework enhancement, issue DC_OCEAN Python package (v1.3.1)
+* September 2024: Paper (Song et al., 2024) published in the Frontier in Marine Sciences; Issue the DC_OCEAN Python package (v.1.3.2)
