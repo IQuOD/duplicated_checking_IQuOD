@@ -8,8 +8,8 @@
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.0			|	Create
-### 2024-06-01	|                   |	1.2			|	Create
-### 2024-07-04	|                   |	1.3			|	Create
+### 2024-06-01	|                   |	1.2			|	Modified
+### 2024-07-04	|                   |	1.3			|	Modified
 ######################################################################
 
 """
@@ -38,7 +38,10 @@ from scipy.stats import zscore
 try:
     import math_util_functions
 except:
-    from DC_OCEAN.util import math_util_functions as math_util_functions
+    try:
+        from util import math_util_functions as math_util_functions
+    except:
+        from DC_OCEAN.util import math_util_functions as math_util_functions
 import argparse
 
 # Used to determine whether the input path is correct

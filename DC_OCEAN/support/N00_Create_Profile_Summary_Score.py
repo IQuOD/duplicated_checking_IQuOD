@@ -7,8 +7,8 @@
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.1			|	Create
-### 2024-06-01	|                   |	1.2			|	Create
-### 2024-07-04	|                   |	1.3			|	Create
+### 2024-06-01	|                   |	1.2			|	Modified
+### 2024-07-04	|                   |	1.3			|	Modified
 ######################################################################
 
 
@@ -62,6 +62,16 @@ def validate_path(input_path):
 
     return True
 
+
+def getFiles(dir): # 查找的根目录dir，文件后缀，例如'.nc'
+    import os
+    file_path = []
+    for root, directory, files in os.walk(dir):  # =>当前根,根下目录,目录下的文件
+        for filename in files:
+            #name, suf = os.path.splitext(filename) # =>文件名,文件后缀
+            file_path.append(os.path.join(root, filename)) # =>吧一串字符串组合成路径
+    return file_path
+    
 #Read NetCDF files and pre-processing metadata and secondary processing data. Retain numerical metadata and convert string metadata into numerical values by using the ASCII code table and then summing these ASCII code values of each letter to obtain a single value.
 def read_netCDF_formatted_PSS_series(inputpath, outputpath):
 
@@ -73,7 +83,7 @@ def read_netCDF_formatted_PSS_series(inputpath, outputpath):
 
 
     # Get all file names in the directory that are not directories themselves
-    filenames = [f for f in os.listdir(inputpath) if os.path.isfile(os.path.join(inputpath, f))]
+    filenames = [f for f in getFiles(inputpath) if os.path.isfile(os.path.join(inputpath, f))]
     n_prof = len(filenames)
 
     # print(filenames)
