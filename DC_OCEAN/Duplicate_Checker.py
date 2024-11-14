@@ -191,11 +191,12 @@ class DuplicateChecker(object):
                     continue
 
                 ### Compare the data
-                try:
-                    isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
-                except:
-                    print(filepath1)
-                    print(filepath2)
+                isDuplicated, duplicate_multimodels = compair_main.compair(content1, content2)
+                # try:
+                #     isDuplicated,duplicate_multimodels=compair_main.compair(content1,content2)
+                # except:
+                #     print(filepath1)
+                #     print(filepath2)
 
                 ### Output nonduplicated profile pair information
                 if (isDuplicated == False):
