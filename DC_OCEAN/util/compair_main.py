@@ -176,7 +176,7 @@ def compair(content1,content2):
 
     ### Different depth number
     ### Qualification: The depth number cannot be too small (more than 3)
-    elif (content1['depth_number']!=content2['depth_number'] and content1['depth_number']>3 and content2['depth_number']>3):
+    elif (content1['depth_number']!=content2['depth_number'] and content1['depth_number']>3 and content2['depth_number']>3 and len(temp1[~np.isnan(temp1)])>3 and len(temp2[~np.isnan(temp2)])>3):
         if (content1['depth_number'] > content2['depth_number']):
             # depth2 interpolates to the depth of depth1
             temp2_interp = np.interp(depth1, depth2, temp2, left=np.nan, right=np.nan, period=None)
@@ -205,7 +205,7 @@ def compair(content1,content2):
             juli_distance = distance(content1['latitude'], content2['latitude'], content1['longitude'],content2['longitude'])
             if (juli_distance > 0.5):
                 duplicate_check4 = False
-
+      
     #### Fifth check: Layer by layer check
     #### Compare deph1,depth2,depth_diff,temp1,temp2,temp_diff,sal_diff
     duplicate_check_combined=False
@@ -309,10 +309,11 @@ def compair(content1,content2):
 
     #### Seventh check: Interpolation check
     #### If the depth layers are not equal, determine whether the data has been interpolated(interpolation method: linear interpolation)
-    if(content1['depth_number']!=content2['depth_number']):
+    if(content1['depth_number']!=content2['depth_number'] and len(temp1[~np.isnan(temp1)])>1 and len(temp2[~np.isnan(temp2)])>1):
         duplicate_check11_T=False
         duplicate_check11_S=False
         ###Temperature
+        #try:
         if(content1['depth_number'] < content2['depth_number']):
             # depth2 interpolates to the depth of depth1, temp2 compare with temp1 layer by layer
             temp2_interp=np.interp(depth1, depth2, temp2, left=np.nan, right=np.nan, period=None)
@@ -345,7 +346,9 @@ def compair(content1,content2):
                 levels=content2['depth_number']
             percent_s=np.float64(nt)/levels
             duplicate_check11_S=percent_s>0.85
-
+        #except:
+            #duplicate_check11_T=False
+            #duplicate_check11_S=False
 
         duplicate_check11=duplicate_check11_T or duplicate_check11_S
 
