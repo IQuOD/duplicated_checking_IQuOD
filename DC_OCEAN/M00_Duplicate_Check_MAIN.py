@@ -20,11 +20,11 @@
     mode = 1:  DuplicateCheckeManual
     Manually check whether the potential duplicates are exact duplicates based on some criterias
     This function is manually ehck one by one pair
-    input data: Filenames of the possible duplicates
+    input data: Filenames of the potential duplicates
     output: whether it is exact duplicated, possible duplicate or non-duplicates. (Screen output)
     
     mode = 0:  DuplicateCheckeList
-    Similar with mode = 1, but check automatically with the possible duplicate list.
+    Similar with mode = 1, but check automatically with the potential duplicate list.
     input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
     output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 """
@@ -42,6 +42,7 @@ import warnings
 warnings.filterwarnings('ignore')
 warnings
 
+# Manually check whether the potential duplicates are exact duplicates based on some criterias one by one pair.
 def DuplicateCheckeManual(checker, InputDir, OutputDir):
     if not os.path.isdir(OutputDir):
         os.mkdir(OutputDir)
@@ -50,6 +51,7 @@ def DuplicateCheckeManual(checker, InputDir, OutputDir):
     else:
         print("The entered path of netCDF files is not valid. Please ensure the path is correct and try again.")
 
+# Automatically check whether the potential duplicates list are exact duplicates based on some criterias.
 def DuplicateCheckeList(checker, InputDir, OutputDir):
     if not os.path.isdir(OutputDir):
         os.mkdir(OutputDir)
