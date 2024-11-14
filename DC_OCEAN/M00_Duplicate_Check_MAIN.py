@@ -8,8 +8,8 @@
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.1			|	Create
-### 2024-06-01	|                   |	1.2			|	Modify
-### 2024-07-04	|                   |	1.3			|	Modify
+### 2024-06-01	|                   |	1.2			|	Modified
+### 2024-07-04	|                   |	1.3			|	Modified
 ######################################################################
 
 """
@@ -20,11 +20,11 @@
     mode = 1:  DuplicateCheckeManual
     Manually check whether the potential duplicates are exact duplicates based on some criterias
     This function is manually ehck one by one pair
-    input data: Filenames of the potential duplicates
+    input data: Filenames of the possible duplicates
     output: whether it is exact duplicated, possible duplicate or non-duplicates. (Screen output)
     
     mode = 0:  DuplicateCheckeList
-    Similar with mode = 1, but check automatically with the potential duplicate list.
+    Similar with mode = 1, but check automatically with the possible duplicate list.
     input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
     output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 """
@@ -42,15 +42,17 @@ import warnings
 warnings.filterwarnings('ignore')
 warnings
 
-# Manually check whether the potential duplicates are exact duplicates based on some criterias one by one pair.
 def DuplicateCheckeManual(checker, InputDir, OutputDir):
+    if not os.path.isdir(OutputDir):
+        os.mkdir(OutputDir)
     if checker.validate_file(InputDir):
         checker.duplicate_checke_manual(InputDir)
     else:
         print("The entered path of netCDF files is not valid. Please ensure the path is correct and try again.")
 
-# Automatically check whether the potential duplicates list are exact duplicates based on some criterias.
 def DuplicateCheckeList(checker, InputDir, OutputDir):
+    if not os.path.isdir(OutputDir):
+        os.mkdir(OutputDir)
     # input the path with filename (*.txt) of the potential duplicated list output from N01_possible_duplicates.py
     potential_txt_path = OutputDir + "/sorted_unique_pairs_generic.txt"
     if checker.validate_file(potential_txt_path):
@@ -83,6 +85,8 @@ if __name__ == '__main__':
     #initialization the code environment (class)
     oChecker = Duplicate_Checker.DuplicateChecker()  
     oChecker.InitEnvironment(InputDir, OutputDir)  
+    
+    
 
     if(iMode == 0):
         #mode = 0:  DuplicateCheckeList
