@@ -8,8 +8,8 @@
 ###		Date	|	Author			|	Version		|	Description
 ### ------------|-------------------|---------------|---------------
 ### 2024-03-26	|                   |	1.1			|	Create
-### 2024-06-01	|                   |	1.2			|	Modify
-### 2024-07-04	|                   |	1.3			|	Modify
+### 2024-06-01	|                   |	1.2			|	Modified
+### 2024-07-04	|                   |	1.3			|	Modified
 ######################################################################
 
 """
@@ -44,6 +44,8 @@ warnings
 
 # Manually check whether the potential duplicates are exact duplicates based on some criterias one by one pair.
 def DuplicateCheckeManual(checker, InputDir, OutputDir):
+    if not os.path.isdir(OutputDir):
+        os.mkdir(OutputDir)
     if checker.validate_file(InputDir):
         checker.duplicate_checke_manual(InputDir)
     else:
@@ -51,6 +53,8 @@ def DuplicateCheckeManual(checker, InputDir, OutputDir):
 
 # Automatically check whether the potential duplicates list are exact duplicates based on some criterias.
 def DuplicateCheckeList(checker, InputDir, OutputDir):
+    if not os.path.isdir(OutputDir):
+        os.mkdir(OutputDir)
     # input the path with filename (*.txt) of the potential duplicated list output from N01_possible_duplicates.py
     potential_txt_path = OutputDir + "/sorted_unique_pairs_generic.txt"
     if checker.validate_file(potential_txt_path):
@@ -83,6 +87,8 @@ if __name__ == '__main__':
     #initialization the code environment (class)
     oChecker = Duplicate_Checker.DuplicateChecker()  
     oChecker.InitEnvironment(InputDir, OutputDir)  
+    
+    
 
     if(iMode == 0):
         #mode = 0:  DuplicateCheckeList
