@@ -80,7 +80,7 @@ class DuplicateChecker(object):
             raise Exception("Invalid Profile_Summary_Score_list!")
 
     '''
-        This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicated, and if so, output
+        This program is used to determine whether the possible duplicates quickly identified in the N01 step are actually duplicated, and if so, output
         input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
         output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
     '''
@@ -129,16 +129,15 @@ class DuplicateChecker(object):
                 print('Duplicate result is: Not Duplicate')
 
     """
-        This program is used to determine whether the potential duplicate pairs quickly identified in the N01 step are actually duplicated, and if so, output
+        This program is used to determine whether the possible duplicates quickly identified in the N01 step are actually duplicated, and if so, output
         input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
         output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
     """
     # mode = 0:  DuplicateCheckeList
     def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
 
-        ### Read potential_files_txt
+        ### Read possible_files_txt
         potential_files_list=self.read_potential_txt(potential_txt_path)
-
 
         # script_directory = os.path.dirname(potential_txt_path)
         script_directory, _filename = os.path.split(potential_txt_path)
