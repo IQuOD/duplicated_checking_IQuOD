@@ -1,8 +1,10 @@
 # DC_OCEAN: An open-source algorithm for identification of duplicates in ocean databases
 
-Release v1.3.3
+Release v1.3.4
 
-Author: Zhetao Tan (IAP/CAS), Xinyi Song (IAP/CAS), Lijing Cheng (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
+Author: Zhetao Tan**^†^**(IAP/CAS), Xinyi Song**^†^** (IAP/CAS), Lijing Cheng (IAP/CAS), Rebecca Cowley (CSIRO), Huifeng Yuan (CNIC/CAS), Guilherme Castelao (SIO), Simona Simoncelli (INGV), Shoichi Kizu (Tohoku University), Ricardo Locarnini (NOAA/NCEI), Tim Boyer (NOAA/NCEI), Franco Reseghetti (INGV), Viktor Gouretski (IAP/CAS)
+
+**†:**These authors contributed equally to this work and share first authorship
 
 International Quality-controlled Ocean Database (*IQuOD*)
 
@@ -28,13 +30,13 @@ NOAA National Centers for Environmental Information, United States.
 
 ## 1. Overview
 
-**This algorithm, namely  DC_OCEAN, aims at detecting the ocean *in-situ* duplicate profiles by reducing the computational intensity in a cost-effective way.**
+**This algorithm, named DC_OCEAN, aims at detecting the ocean *in-situ* duplicate profiles by reducing the computational intensity in a cost-effective way.**
 
 It utilizes a 'profile summary score (PSS)' method, which assigns a numerical value to each profile using primary metadata (e.g., latitude, longitude, instrument types) and secondary data (e.g., sum of depth, sum of temperature, standard deviation of temperature in the profile). 
 
 The core assumption of this algorithm is that if it's a duplicate pair, most of the metadata and observational data will be identical.
 
-The duplicate checking algorithm can support various groups including IQuoD, IAP/CAS, WOD/NCEI, CODC etc.
+The duplicate checking algorithm can support various groups including IQuOD, IAP/CAS, WOD/NCEI, CODC etc.
 
 The codes need to be run with Python 3.
 
@@ -57,10 +59,8 @@ DC_OCEAN is an open-source Python library designed for detecting duplicate profi
 **The DC_OCEAN is composed of two main components:**
 
 * **The first component** involves the processing of metadata by calculating their corresponding PSS for each profile. These files are stored in the 'support' folder.
-
 * **The second component** is the core program of DC_OCEAN, designed to determine whether potential duplicate pairs are real duplicates or not.
-
-
+* 
 
 **The first component includes a total of 2 scripts:**
 
@@ -90,7 +90,7 @@ In short, there are 4 steps to run the DC_OCEAN (see Table 1).
 | :-------: | :-----------------------------------: | :----------------------------------------------------------: |
 |     1     |   support/N00_Create_Profile_Summary_Score.py   |                   Preprocess the metadata                    |
 |     2     | support/N01_Possible_Duplicate_Check.py | Utilize fourteen distinct screening criteria to calculate the Profile Summary Score and identify potential duplicate pairs. |
-|     3     | Duplicate_Checker.py | Determine whether the potential duplicates in the results of Possible_Duplicate_check.py are the real duplicates or not by manually checking and automatic check. |
+|     3     | Duplicate_Checker.py | Determine whether the possible duplicates in the results of Possible_Duplicate_check.py are the real duplicates or not by manually checking and automatic check. |
 |     4     |  M00_Duplicate_Check_MAIN.py  |         The overall flow of duplicate check. **It is the entry for the duplicate check program.**         |
 
  For more details and interpreation of the codes above, please refer to Song et al., 2024, Frontier in Marine Science.
@@ -131,8 +131,6 @@ If you fail this step, you can manually install the package with the `DC_OCEAN-1
 ```shell
 pip install DC_OCEAN-1.3.2-py3-none-any
 ```
-
-
 
 **Step 2: Make a first and easiest QC test.** 
 
@@ -230,20 +228,20 @@ CTD double data check: 0
    150.000    150.000      0.000     2.5000     2.5000     0.0000     0.0000
    200.000    200.000      0.000     1.3200     1.3200     0.0000     0.0000
    300.000    300.000      0.000     0.6600     0.6600     0.0000     0.0000
-Duplicate result is: Near Duplicate
+Duplicate result is: Possible Duplicate
 ```
 
 Now, you can get started with DC_OCEAN!
 
-##4. Logical flow of DC_OCEAN
+### 4. Logical flow of DC_OCEAN
 
-#### 4.1  support files to calculate the Profile Summary Score and potential duplicates list 
+#### 4.1  support files to calculate the Profile Summary Score and possible duplicates list 
 
 In this step, we will pre-processes the profiles and metadata, using ASCII to convert character (string) variables into numerical values. This process generates the `../Input_files/Profile_Summary_Score_list.npz` file. You'll find three variables in this npz file: `PSS_series`, `filename_info`, and `variable_name`.
 
 ```shell
 cd <DC_ocean>/support
-python python N00_Create_Profile_Summary_Score.py -i <input_path> -o <output_path>
+python N00_Create_Profile_Summary_Score.py -i <input_path> -o <output_path>
 ```
 
 The acceptable input parameters are as follows:
@@ -266,13 +264,13 @@ python N00_Create_Profile_Summary_Score.py -i <DC_ocean>/Input_files/WOD18_sampl
 If return the following result, congratulations!! The first step works well.
 
 ```
-Processing file 1/1883: wod_007274912O.nc
+Processing file 1/1000: wod_004181522O.nc
 ....
 ....
-Processing file 1880/1883: wod_007275383O.nc
-Processing file 1881/1883: wod_007274923O.nc
-Processing file 1882/1883: wod_007274937O.nc
-Processing file 1883/1883: wod_007275397O.nc
+Processing file 997/1000: wod_007275482O.nc
+Processing file 998/1000: wod_007275483O.nc
+Processing file 999/1000: wod_007275484O.nc
+Processing file 1000/1000: wod_007275485O.nc
 ******************************************************
 
 The Profile Summary Score formatted file are output to current folder: <DC_ocean>\Input_files
@@ -312,13 +310,13 @@ Running the Crude Screen check: the No.11 criteria check...
 Running the Crude Screen check: the No.12 criteria check...
 Running the Crude Screen check: the No.13 criteria check...
 Running the Crude Screen check: the No.14 criteria check...
-The number of the potential duplicates pairs are:
-('wod_007276168O.nc', 'wod_007276473O.nc')
+The number of the possible duplicates pairs are:
+('wod_007274512O.nc', 'wod_007274809O.nc')
 ...
 ...
-('wod_007275019O.nc', 'wod_007275021O.nc')
-('wod_007275041O.nc', 'wod_007276232O.nc')
-The number of the possible duplicates pairs are: 258
+('wod_007274751O.nc', 'wod_007274809O.nc')
+('wod_007274513O.nc', 'wod_007274515O.nc')
+The number of the possible duplicates pairs are: 29
 
 *************FINISHED****************
 The possible duplicates list is stored in: <DC_OCEAN>\Input_files\sorted_unique_pairs_generic.txt
@@ -327,7 +325,7 @@ Then, please run the MAIN files (M00_Duplicate_Check_MAIN.py) to determine wheth
 SUCCESSFULLY run the crude screen check!!
 ```
 
-Here, the potential duplicate pairs list is saved as `./Input_files/sorted_unique_pairs_generic.txt`, which can be easily opened using Excel for further examination.
+Here, the possible duplicate pairs list is saved as `./Input_files/sorted_unique_pairs_generic.txt`, which can be easily opened using Excel for further examination.
 
 You can now go to the Section 4.2.
 
@@ -358,13 +356,13 @@ This program aims to use the knowledge of physical oceanography and the expert e
 
 Using `DuplicateCheckeManual` in  `Duplicate_Checker.py` enables a manual check, providing a side-by-side comparison of metadata information between potential duplicate and unduplicated profile data pairs. This facilitates a more precise determination of duplicates.
 
-The manual check codes are storage in the <DC_OCEAN> main folder (`Duplicate_Checker.py`) at Line 79-131.
+The manual check codes are storage in the <DC_OCEAN> main folder (`Duplicate_Checker.py`) at Line 88-129.
 
 ```python
 '''
-	This program is used to determine whether the potential duplicate pairs quickly identified in the N02 step are actually duplicates, if so, output
-	the data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
-	output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
+	This program is used to determine whether the possible duplicates quickly identified in the N01 step are actually duplicated, and if so, output
+        input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
+        output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 '''
 def duplicate_checke_manual(self, netCDF_filepath):
     while True:
@@ -372,18 +370,6 @@ def duplicate_checke_manual(self, netCDF_filepath):
         file1=input('The first netCDF file name is: ').rstrip().lstrip()
         file2=input('The second netCDF file name is: ').rstrip().lstrip()
         isOutput_detail = input("Output profile information or not(1: Yes; 0: No)")
-
-        # index_str=file1.rfind('_')
-        # date1=file1[index_str-14:index_str-6]
-        # year1=date1[0:4]
-        # month1=date1[4:6]
-        # path1=os.path.join(netCDF_filepath,year1,month1)
-
-        # index_str=file2.rfind('_')
-        # date2=file2[index_str-14:index_str-6]
-        # year2=date2[0:4]
-        # month2=date2[4:6]
-        # path2=os.path.join(netCDF_filepath,year2,month2)
 
         filepath1=os.path.join(netCDF_filepath,file1)
         filepath2=os.path.join(netCDF_filepath,file2)
@@ -412,25 +398,24 @@ def duplicate_checke_manual(self, netCDF_filepath):
 
 > Please specify the ***netCDF_filepath*** to suit your specific case. We've provided a demo using WOD18 data in 1995 with netCDF format. You can download the compressed file [here](www.ocean.iap.ac.cn/) and then extract it to your local directory.
 
-
-
-##### 4.2.2 Atuomatically check (DuplicateCheckeList)
+##### 4.2.2 Automatically check (DuplicateCheckeList)
 
 The logical flow is consistent with Section 4.2.1, with the only difference being the modification of input and output formats.
+
+The automatically check codes are storage in the <DC_OCEAN> main folder (`Duplicate_Checker.py`) at Line 137-231.
 
 It should be noted that **the input of this code is sourced from the output in 4.1**
 
 ```python
 """
-    This program is used to determine whether the potential duplicate pairs quickly identified in the N01 step are actually duplicated, and if so, output
-    input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
-    output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
+    This program is used to determine whether the possible duplicates quickly identified in the N01 step are actually duplicated, and if so, output
+        input data: the txt file output from the ./support/N01_Possible_Duplicate_Check.py
+        output: two txt files: the duplicated list and the non-duplicated list. These two files can be opened by using Excel etc.
 """
 def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
 
-    ### Read potential_files_txt
+    ### Read possible_files_txt
     potential_files_list=self.read_potential_txt(potential_txt_path)
-
 
     # script_directory = os.path.dirname(potential_txt_path)
     script_directory, _filename = os.path.split(potential_txt_path)
@@ -455,23 +440,8 @@ def duplicate_checke_multiple(self,netCDF_filepath,potential_txt_path):
             # isOutput_detail = input("Output profile information or not(1: Yes; 0: No)")
             isOutput_detail='0'
             
-            # index_str=file1.rfind('_')
-            # date1=file1[index_str-14:index_str-6]
-            # year1=date1[0:4]
-            # month1=date1[4:6]
-            # day1=date1[6:8]
-            # path1=os.path.join(netCDF_filepath,year1,month1)
-
-            # index_str=file2.rfind('_')
-            # date2=file2[index_str-14:index_str-6]
-            # year2=date2[0:4]
-            # month2=date2[4:6]
-            # day2=date2[6:8]
-            # path2=os.path.join(netCDF_filepath,year2,month2)
-            
             filepath1=os.path.join(netCDF_filepath,file1)
             filepath2=os.path.join(netCDF_filepath,file2)
-            #print(filepath1)
 
             ### Read the first netCDF file data
             try:
@@ -560,8 +530,6 @@ Table 2 presents the variables saved in the `*.txt` files and their correspondin
 
 The above data files can be viewed and modified using Excel.
 
-
-
 ## 5. Getting Started with DC_OCEAN
 
 Here, we will use some *in-situ* observational profiles in 1995 downloaded from the World Ocean Database (WOD18) to run the DC_OCEAN, aiming to detect the potential duplicate profiles within this dataset. These netCDF files are stored in `<DC_ocean>/Input_files/WOD18_sample_1995`
@@ -593,8 +561,6 @@ Update Profile Summary Score list or not(1: Yes (default); 0: No): 1
 
 Then, it will automatically running all supporting files (`N00_Create_Profile_Summary_Score.py` and `N01_Possible_Duplicate_Check.py`). The output files are the duplicate and non-duplicate lists (test files) saved in the default output directory.
 
-
-
 **Example #2:** To customize mode parameters with different input and output path:
 
 ```shell
@@ -615,15 +581,13 @@ The first netCDF file name is:wod_007274512O.nc
 The second netCDF file name is: wod_007274809O.nc
 ```
 
-choose whether you want to output the comparasion information (1-yes; 0: no):
+choose whether you want to output the comparison information (1: yes; 0: no):
 
 ```
 Output profile information or not(1: Yes; 0: No):  1
 ```
 
 Then, it will output the results similar as Section 3.
-
-
 
 **Example #3:** One can customize parameters as needed:
 
@@ -632,8 +596,6 @@ python M00_Duplicate_Check_MAIN.py -i /path/to/input -o /path/to/output -m 0
 ```
 
 In this example, the input directory and output directory **are entered via argument passing.**
-
-
 
 
 ## 6. Notes for WOD18 netCDF format
@@ -671,8 +633,6 @@ Here, we also provide a *.cdl file [here](https://github.com/IQuOD/duplicated_ch
 |        platform        |     Name of platform from which measurements were taken      |   char    |
 |     Ocean_Vehicle      |                        Ocean vehicle                         |   char    |
 |       Institute        |            name of institute which collected data            |   char    |
-
-
 
 The *.cdl file is attached here:
 
@@ -809,8 +769,6 @@ variables:
 
 ```
 
-
-
 ## 7. References
 
 For more information about the DC_OCEAN, please refer to the documents or links below:
@@ -860,3 +818,5 @@ If you have any questions, suggestions, find any bugs, or you're interested in f
 * May 2024: Issued DC_OCEAN Python package (v1.2)
 * July 2024: Code encapsulation and framework enhancement, issue DC_OCEAN Python package (v1.3.1)
 * September 2024: Paper (Song et al., 2024) published in the Frontier in Marine Sciences; Issue the DC_OCEAN Python package (v.1.3.3)
+* November 2024: Update code to v.1.3.4
+
