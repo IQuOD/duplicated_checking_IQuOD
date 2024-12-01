@@ -35,13 +35,8 @@ import pandas as pd
 import os
 import scipy.io as sio
 from scipy.stats import zscore
-try:
-    import math_util_functions
-except:
-    try:
-        from util import math_util_functions as math_util_functions
-    except:
-        from DC_OCEAN.util import math_util_functions as math_util_functions
+from DC_OCEAN.util import math_util_functions as math_util_functions
+
 import argparse
 
 # Used to determine whether the input path is correct
@@ -56,12 +51,12 @@ def validate_file(input_path):
     return True
 
 ##### Crude screening check
-##### logical flow: see Figure 1 in the manuscrpt (standard 1)
+##### logical flow: see Figure 1 in the manuscript (standard 1)
 def N02_1_PSS_check_standardize_line(PSS_series,filename_info):
-    '''
+    """
     Standardize each line of data.
     Calculate the arithmetic average of each line and then compare which is closer.
-    '''
+    """
 
     # Normalization: The data is normalized to data with a mean of 0 and a variance of 1
     PSS_series_copy = PSS_series.copy()
@@ -76,7 +71,6 @@ def N02_1_PSS_check_standardize_line(PSS_series,filename_info):
 
     # Calculate the arithmetic average of each line
     average_PSS = np.nanmean(PSS_mapped, axis=1)
-
 
     # Sort average_PSS in ascending order
     index = np.argsort(average_PSS)
@@ -149,19 +143,17 @@ def N02_1_PSS_check_standardize_line(PSS_series,filename_info):
 
 
 def N02_2_PSS_check_standardize_depth_tem(PSS_series,filename_info):
-    '''
+    """
     Focus on searching for potential duplicate pairs that are equal in sum_depth and sum_temperature.
-    '''
+    """
 
     # Normalization: The data is normalized to data with a mean of 0 and a variance of 1
     PSS_series_copy = PSS_series.copy()
     PSS_series_temp_depth=PSS_series_copy[:,[26,28]]
     PSS_series_temp_depth[np.abs(PSS_series_temp_depth)>1e6]=np.nan
 
-
     # Calculate the arithmetic average of each line
     average_PSS = np.nanmean(PSS_series_temp_depth, axis=1)
-
 
     # Sort average_PSS in ascending order
     index = np.argsort(average_PSS)
@@ -244,7 +236,6 @@ def N02_2_PSS_check_standardize_depth_tem(PSS_series,filename_info):
     return duplicate_filename_list
 
 
-
 def N02_3_PSS_check_entropy_weight(PSS_series,filename_info):
     '''
     Normalize each line of data.
@@ -262,7 +253,7 @@ def N02_3_PSS_check_entropy_weight(PSS_series,filename_info):
     PSS_mapped[PSS_series_meta == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta);
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta)
 
     # Calculate the weighted average
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -336,6 +327,7 @@ def N02_3_PSS_check_entropy_weight(PSS_series,filename_info):
             number_profiles += duplicate_number
     return duplicate_filename_list
 
+
 def N02_4_PSS_check_entropy_weight_allinfo(PSS_series,filename_info):
     '''
     Normalize each line of data.
@@ -353,8 +345,7 @@ def N02_4_PSS_check_entropy_weight_allinfo(PSS_series,filename_info):
     PSS_mapped[PSS_series_copy == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_copy);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_copy)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -401,7 +392,6 @@ def N02_4_PSS_check_entropy_weight_allinfo(PSS_series,filename_info):
             if fragment_same_number < 27:
                 continue
 
-            
             # Handling of specific probe types and conditions
             #If it is XBT CTD MBT BOT; the location difference is plus or minus 5 degrees within a month; the same probe----excludes navigation continuous observation
             #If type,platform, and vehicle are the same, but sum_temp,corr(temp,depth) are different, it is judged to be multiple observations on the same survey ship/platform on the same route
@@ -432,6 +422,7 @@ def N02_4_PSS_check_entropy_weight_allinfo(PSS_series,filename_info):
             number_profiles += duplicate_number
     return duplicate_filename_list
 
+
 def N02_5_PSS_check_entropy_weight_noLATLON(PSS_series,filename_info):
     '''
     Normalize each line of data.
@@ -451,8 +442,7 @@ def N02_5_PSS_check_entropy_weight_noLATLON(PSS_series,filename_info):
     PSS_mapped[PSS_series_copy == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_copy);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_copy)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -490,7 +480,6 @@ def N02_5_PSS_check_entropy_weight_noLATLON(PSS_series,filename_info):
             if fragment_same_number < 26:
                 continue
 
-            
             # Handling of specific probe types and conditions
             #If it is XBT CTD MBT BOT; the location difference is plus or minus 5 degrees within a month; the same probe----excludes navigation continuous observation
             #If type,platform, and vehicle are the same, but sum_temp,corr(temp,depth) are different, it is judged to be multiple observations on the same survey ship/platform on the same route
@@ -521,6 +510,7 @@ def N02_5_PSS_check_entropy_weight_noLATLON(PSS_series,filename_info):
             number_profiles += duplicate_number
     return duplicate_filename_list
 
+
 def N02_6_PSS_check_entropy_weight_noDepth(PSS_series,filename_info):
     '''
     Normalize each line of data.
@@ -539,8 +529,7 @@ def N02_6_PSS_check_entropy_weight_noDepth(PSS_series,filename_info):
     PSS_mapped[PSS_series_meta == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -608,8 +597,8 @@ def N02_7_PSS_check_normalize_column(PSS_series,filename_info):
     # Normalization: The data is normalized to data with a mean of 0 and a variance of 1
     PSS_series_copy = PSS_series.copy()
 
-    ###### 判断WMO_ID在那一列？
-    PSS_series_copy = np.delete(PSS_series_copy, 19, axis=1)  # Deleting the 20th column
+    # Deleting the 20th column
+    PSS_series_copy = np.delete(PSS_series_copy, 19, axis=1)
 
     ###### normalizeData with mean as 0 and standard deviation as 1
     PSS_mapped = math_util_functions.normalizeData(PSS_series_copy, 0, 1)
@@ -618,7 +607,6 @@ def N02_7_PSS_check_normalize_column(PSS_series,filename_info):
 
     # Calculate the arithmetic average of each line
     average_PSS = np.nanmean(PSS_mapped, axis=1)
-
 
     # Sort average_PSS in ascending order
     index = np.argsort(average_PSS)
@@ -701,13 +689,11 @@ def N02_8_PSS_check_normalize_depth_tem(PSS_series,filename_info):
 
     PSS_series_temp_depth[np.abs(PSS_series_temp_depth)>1e6]=np.nan
 
-
     #using mapminmax normalize each column of data
-    PSS_series_temp_depth=math_util_functions.normalizeData(PSS_series_temp_depth,0,1);
+    PSS_series_temp_depth=math_util_functions.normalizeData(PSS_series_temp_depth,0,1)
 
     # Calculate the arithmetic average of each line
     average_PSS = np.nanmean(PSS_series_temp_depth, axis=1)
-
 
     # Sort average_PSS in ascending order
     index = np.argsort(average_PSS)
@@ -790,7 +776,6 @@ def N02_8_PSS_check_normalize_depth_tem(PSS_series,filename_info):
     return duplicate_filename_list
 
 
-
 def N02_9_PSS_check_entropy_normalizeData_column(PSS_series,filename_info):
     '''
     Normalize each column of data.
@@ -804,11 +789,11 @@ def N02_9_PSS_check_entropy_normalizeData_column(PSS_series,filename_info):
 
     ###### normalizeData to 0-1
     PSS_mapped = math_util_functions.normalizeData(PSS_series_meta, 0, 1)
-    PSS_mapped[:,4]=0; #delete year column
+    PSS_mapped[:,4]=0 #delete year column
     PSS_mapped[PSS_series_meta == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta);
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta)
 
     # Calculate the weighted average
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -882,6 +867,7 @@ def N02_9_PSS_check_entropy_normalizeData_column(PSS_series,filename_info):
             number_profiles += duplicate_number
     return duplicate_filename_list
 
+
 def N02_10_PSS_check_normalizeData_weight_column_allinfo(PSS_series,filename_info):
     '''
     Normalize each column of data.
@@ -899,8 +885,7 @@ def N02_10_PSS_check_normalizeData_weight_column_allinfo(PSS_series,filename_inf
     PSS_mapped[PSS_series_copy == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_copy);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_copy)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -947,7 +932,6 @@ def N02_10_PSS_check_normalizeData_weight_column_allinfo(PSS_series,filename_inf
             if fragment_same_number < 27:
                 continue
 
-            
             # Handling of specific probe types and conditions
             #If it is XBT CTD MBT BOT; the location difference is plus or minus 5 degrees within a month; the same probe----excludes navigation continuous observation
             #If type,platform, and vehicle are the same, but sum_temp,corr(temp,depth) are different, it is judged to be multiple observations on the same survey ship/platform on the same route
@@ -977,7 +961,6 @@ def N02_10_PSS_check_normalizeData_weight_column_allinfo(PSS_series,filename_inf
             number_pairs += 1
             number_profiles += duplicate_number
     return duplicate_filename_list
-
 
 
 def N02_11_PSS_check_normalize_column_entropy_weight(PSS_series,filename_info):
@@ -1037,7 +1020,6 @@ def N02_11_PSS_check_normalize_column_entropy_weight(PSS_series,filename_info):
             if fragment_same_number < 26:
                 continue
 
-            
             # Handling of specific probe types and conditions
             #If it is XBT CTD MBT BOT; the location difference is plus or minus 5 degrees within a month; the same probe----excludes navigation continuous observation
             #If type,platform, and vehicle are the same, but sum_temp,corr(temp,depth) are different, it is judged to be multiple observations on the same survey ship/platform on the same route
@@ -1083,12 +1065,11 @@ def N02_12_PSS_check_entropy_weight_column_noDepth(PSS_series,filename_info):
 
     ###### normalizeData to 0-1
     PSS_mapped = math_util_functions.normalizeData(PSS_series_meta, 0, 1)
-    PSS_mapped[:,4]=0;
+    PSS_mapped[:,4]=0
     PSS_mapped[PSS_series_meta == 0] = 0
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_series_meta)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -1160,8 +1141,7 @@ def N02_13_PSS_check_PCA_90_allinfo(PSS_series,filename_info):
     PSS_mapped=math_util_functions.PCA_PSS_profiles(PSS_series_copy,0.9)
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_mapped);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_mapped)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -1208,7 +1188,6 @@ def N02_13_PSS_check_PCA_90_allinfo(PSS_series,filename_info):
             if fragment_same_number < 27:
                 continue
 
-            
             # Handling of specific probe types and conditions
             # Exclude long-term continuous observation of fixed points/nearby points
             if (PSS_series_small[0, 1] in {1, 7, 5} and PSS_series_small[1, 1] == PSS_series_small[0, 1]):
@@ -1227,8 +1206,6 @@ def N02_13_PSS_check_PCA_90_allinfo(PSS_series,filename_info):
             number_pairs += 1
             number_profiles += duplicate_number
     return duplicate_filename_list
-
-
 
 
 def N02_14_PSS_check_PCA_95_allinfo(PSS_series,filename_info):
@@ -1245,8 +1222,7 @@ def N02_14_PSS_check_PCA_95_allinfo(PSS_series,filename_info):
     PSS_mapped=math_util_functions.PCA_PSS_profiles(PSS_series_copy,0.95)
 
     #Use entropy weight method to calculate the weight
-    [weight,_]=math_util_functions.entropy_weight(PSS_mapped);
-
+    [weight,_]=math_util_functions.entropy_weight(PSS_mapped)
 
     # Calculate the weighted average for each column
     average_PSS_single = np.full_like(PSS_mapped,np.nan,dtype=float)
@@ -1292,7 +1268,6 @@ def N02_14_PSS_check_PCA_95_allinfo(PSS_series,filename_info):
             fragment_same_number = np.nansum(np.abs(PSS_series_small[0, :] - PSS_series_small[1, :]) < 1e-5, axis=None)
             if fragment_same_number < 27:
                 continue
-
             
             # Handling of specific probe types and conditions
             # Exclude long-term continuous observation of fixed points/nearby points
@@ -1313,7 +1288,6 @@ def N02_14_PSS_check_PCA_95_allinfo(PSS_series,filename_info):
             number_profiles += duplicate_number
     return duplicate_filename_list
 
-
 def main(PSS_summary_filename):
     # Load *.npz data
     print('loading the PSS summary files....')
@@ -1322,56 +1296,96 @@ def main(PSS_summary_filename):
     meta_names = data['meta_names']
     filename_info = data['filenames']
 
-
-    ####### N02_1: run Crude Scrren" Arithmetic mean: standardlizatioin check
+    ####### Run Crude Screen
     print('Running the Crude Screen check: the No.1 criteria check...')
     duplicate_filename_list_1=N02_1_PSS_check_standardize_line(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_1, PSS_summary_filename,'N02_1.txt')
+    # N02_1_number = len(duplicate_filename_list_1)
+    # raise('error')
 
-    ##### run Crude Scrren" Arithmetic mean: standardlizatioin check
     print('Running the Crude Screen check: the No.2 criteria check...')
     duplicate_filename_list_2=N02_2_PSS_check_standardize_depth_tem(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_2, PSS_summary_filename, 'N02_2.txt')
+    # N02_2_number = len(duplicate_filename_list_2)
 
-    ##### run Crude Scrren" Arithmetic mean: standardlizatioin check
     print('Running the Crude Screen check: the No.3 criteria check...')
     duplicate_filename_list_3=N02_3_PSS_check_entropy_weight(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_3, PSS_summary_filename, 'N02_3.txt')
+    # N02_3_number = len(duplicate_filename_list_3)
 
     print('Running the Crude Screen check: the No.4 criteria check...')
     duplicate_filename_list_4=N02_4_PSS_check_entropy_weight_allinfo(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_4, PSS_summary_filename, 'N02_4.txt')
+    # N02_4_number = len(duplicate_filename_list_4)
 
     print('Running the Crude Screen check: the No.5 criteria check...')
     duplicate_filename_list_5=N02_5_PSS_check_entropy_weight_noLATLON(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_5, PSS_summary_filename, 'N02_5.txt')
+    # N02_5_number = len(duplicate_filename_list_5)
 
     print('Running the Crude Screen check: the No.6 criteria check...')
     duplicate_filename_list_6=N02_6_PSS_check_entropy_weight_noDepth(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_6, PSS_summary_filename, 'N02_6.txt')
+    # N02_6_number = len(duplicate_filename_list_6)
 
     print('Running the Crude Screen check: the No.7 criteria check...')
     duplicate_filename_list_7=N02_7_PSS_check_normalize_column(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_7, PSS_summary_filename, 'N02_7.txt')
+    # N02_7_number = len(duplicate_filename_list_7)
 
     print('Running the Crude Screen check: the No.8 criteria check...')
     duplicate_filename_list_8=N02_8_PSS_check_normalize_depth_tem(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_8, PSS_summary_filename, 'N02_8.txt')
+    # N02_8_number = len(duplicate_filename_list_8)
 
     print('Running the Crude Screen check: the No.9 criteria check...')
     duplicate_filename_list_9=N02_9_PSS_check_entropy_normalizeData_column(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_9, PSS_summary_filename, 'N02_9.txt')
+    # N02_9_number = len(duplicate_filename_list_9)
 
     print('Running the Crude Screen check: the No.10 criteria check...')
     duplicate_filename_list_10=N02_10_PSS_check_normalizeData_weight_column_allinfo(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_10, PSS_summary_filename, 'N02_10.txt')
+    # N02_10_number = len(duplicate_filename_list_10)
     
     print('Running the Crude Screen check: the No.11 criteria check...')
     duplicate_filename_list_11=N02_11_PSS_check_normalize_column_entropy_weight(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_11, PSS_summary_filename, 'N02_11.txt')
+    # N02_11_number = len(duplicate_filename_list_11)
 
     print('Running the Crude Screen check: the No.12 criteria check...')
     duplicate_filename_list_12=N02_12_PSS_check_entropy_weight_column_noDepth(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_12, PSS_summary_filename, 'N02_12.txt')
+    # N02_12_number = len(duplicate_filename_list_12)
 
     print('Running the Crude Screen check: the No.13 criteria check...')
     duplicate_filename_list_13=N02_13_PSS_check_PCA_90_allinfo(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_13, PSS_summary_filename, 'N02_13.txt')
+    # N02_13_number = len(duplicate_filename_list_13)
 
     print('Running the Crude Screen check: the No.14 criteria check...')
     duplicate_filename_list_14=N02_14_PSS_check_PCA_95_allinfo(PSS_series,filename_info)
+    # 2024.11.25 Output each check result to a txt file
+    # save_txt(duplicate_filename_list_14, PSS_summary_filename, 'N02_14.txt')
+    # N02_14_number = len(duplicate_filename_list_14)
 
-    #combine all potential duplicate list from No.1 checks to No.14 checks
+    ## Combine all potential duplicate list from No.1 checks to No.14 checks
     All_potential_duplicate_list=duplicate_filename_list_1+duplicate_filename_list_2+duplicate_filename_list_3+duplicate_filename_list_4+duplicate_filename_list_5+duplicate_filename_list_6+duplicate_filename_list_7+duplicate_filename_list_8+duplicate_filename_list_9+duplicate_filename_list_10+duplicate_filename_list_11+duplicate_filename_list_12+duplicate_filename_list_13+duplicate_filename_list_14
 
-    # 'unique' the pair
+    ## 'unique' the pair
     All_potential_duplicate_list = math_util_functions.process_file_pairs_generic(All_potential_duplicate_list)
 
     print('The number of the possible duplicates pairs are:')
@@ -1381,6 +1395,22 @@ def main(PSS_summary_filename):
     print('The number of the possible duplicates pairs are: '+str(len(All_potential_duplicate_list)))
 
     return All_potential_duplicate_list
+
+# 2024.11.25
+# Output each check result in txt format
+def save_txt(All_potential_duplicate_list,PSS_summary_filename,txt_name):
+    ### write the potential_duplicate_list to text file
+    [script_directory,_]=os.path.split(PSS_summary_filename)
+    if not os.path.exists(script_directory):
+        os.makedirs(script_directory)
+
+    output_file=os.path.join(script_directory,txt_name)
+    with open(output_file, 'w') as file:
+        for pair in All_potential_duplicate_list:
+            file.write(f"{pair[0]} {pair[1]}\n")
+
+    # output
+    print('The txt is stored in: ' + output_file)
 
 # Storing potential duplicates
 def save_txt_duplicate_list(All_potential_duplicate_list,PSS_summary_filename):
@@ -1396,13 +1426,18 @@ def save_txt_duplicate_list(All_potential_duplicate_list,PSS_summary_filename):
 
     #output
     print('The potential duplicates pair list is stored in: '+output_file)
-    print('Then, please run the M01/M02 files to determine whether the potential duplicate pairs are exact/possible/no duplicates or not')
-
+    print('Then, please run the M00 files to determine whether the potential duplicate pairs are exact/possible/no duplicates or not')
 
 
 if __name__ == '__main__':
     # filepath = '../Input_files/PSS_summary.npz'
+
+    # Default Path
     PSS_summary_filename = os.path.dirname(os.path.abspath(__file__)) + "/../Input_files/"
+
+    # 2024.11.25
+    # custom path
+    # PSS_summary_filename = "D:\duplicate_checking\WOD_result_1975\Profile_Summary_Score_list.npz"
 
     parser = argparse.ArgumentParser(description='Potential Duplicate Check')
     parser.add_argument("-d", "--PSSfolder", type=str, default=PSS_summary_filename)
