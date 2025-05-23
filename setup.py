@@ -6,9 +6,9 @@ with open("README.md",'r',encoding='utf-8') as fh:
 
 setuptools.setup(
     name="DC_OCEAN",
-    version="1.3.2",
+    version="1.3.4",
     author ="Zhetao Tan; Xinyi Song, Lijing Cheng, Rebecca Cowley, Huifeng Yuan, Guilherme Castelao, Simona Simoncelli, Shoichi Kizu, Ricardo Locarnini, Tim Boyer, Franco Reseghetti, Viktor Gouretski",
-    author_email = "tanzhetao@mail.iap.ac.cn; songxinyi231@mails.ucas.ac.cn",
+    author_email = "tanzhetao19@mails.ucas.ac.cn; songxinyi231@mails.ucas.ac.cn",
     description = "DC_OCEAN: An algorithm to detect the ocean in-situ duplicate profiles (Song et al., 2024, FMS)",
     long_description = long_description,
     long_description_content_type="text/markdown",
