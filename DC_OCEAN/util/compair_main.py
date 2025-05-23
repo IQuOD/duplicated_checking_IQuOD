@@ -363,6 +363,18 @@ def compair(content1,content2):
                 if index1:
                     duplicate_check11 = False
 
+        ### 2025.1.13
+        ### The up and down data of instruments glider are not duplicates
+        if ('gld' in content1['dataset_name'] and 'gld' in content2['dataset_name']) or ('glider' in content1['dataset_name'] and 'glider' in content2['dataset_name']):
+            index1 = content1['year'] == content2['year'] and content1['month'] == content2['month'] and content1['day'] == content2['day'] and content1['hour'] == content2['hour'] and content1['minute'] == content2['minute']
+            index2 = (content1['hour'] != 0 and content2['hour'] != 0 and content1['minute'] != 0 and content2['minute'] != 0) or (content1['hour'] == 0 and content2['hour'] == 0 and content1['minute'] != 0 and content2['minute'] != 0)
+            index3 = (content1['ocean_vehicle'] == content2['ocean_vehicle'] and content1['ocean_vehicle'] != '') or (content1['WOD_cruise_identifier'] == content2['WOD_cruise_identifier'] and content1['WOD_cruise_identifier'] != '')
+            index4 = np.abs(content1['latitude']-content2['latitude'])<1e-4 and np.abs(content1['longitude']-content2['longitude'])<1e-4
+            index5 = (content1['Cast_Direction'] != '' and content2['Cast_Direction'] != '' and content1['Cast_Direction'] != content2['Cast_Direction'])
+            index6 = content1['access_no'] == content2['access_no']
+            if (index1 and index2 and index3 and index4 and index5 and index6):
+                duplicate_check11 = False
+
     #### Eighth check: CTD double data check
     #### Two sensors of CTD work simultaneously two sets of data
     if ('CTD' in content1['dataset_name'] and 'CTD' in content2['dataset_name']) or ('ctd' in content1['dataset_name'] and 'ctd' in content2['dataset_name']):
@@ -383,8 +395,7 @@ def compair(content1,content2):
     isDuplicate=duplicate_check1 or duplicate_check2 or duplicate_check3 or duplicate_check4 or duplicate_check5 or duplicate_check6 or duplicate_check7 or duplicate_check8 or duplicate_check9 or duplicate_check10 or duplicate_check11 or duplicate_check12
 
     if (isDuplicate == False):  # nonduplicated
-        duplicate_multimodels = (
-        duplicate_check1, duplicate_check2, duplicate_check3, duplicate_check4, duplicate_check5, duplicate_check6,
+        duplicate_multimodels = (duplicate_check1, duplicate_check2, duplicate_check3, duplicate_check4, duplicate_check5, duplicate_check6,
         duplicate_check7, duplicate_check8, duplicate_check9, duplicate_check10, duplicate_check11, duplicate_check12)
         return isDuplicate, duplicate_multimodels
 
